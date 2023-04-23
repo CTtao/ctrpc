@@ -13,6 +13,8 @@
         <module>ctrpc-common</module>
         <module>ctrpc-test</module>
         <module>ctrpc-provider</module>
+        <module>ctrpc-protocol</module>
+        <module>ctrpc-constants</module>
     </modules>
 
     <properties>
