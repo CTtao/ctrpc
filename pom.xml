@@ -11,7 +11,8 @@
     <modules>
         <module>ctrpc-annotation</module>
         <module>ctrpc-common</module>
-        <module>ctrpc-test-scanner</module>
+        <module>ctrpc-test</module>
+        <module>ctrpc-provider</module>
     </modules>
 
     <properties>
