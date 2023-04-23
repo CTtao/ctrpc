@@ -38,18 +38,33 @@ public class RpcServiceScanner extends ClassScanner {
                 RpcService rpcService = clazz.getAnnotation(RpcService.class);
                 if (rpcService != null){
                     //优先使用interfaceClass，interfaceClass的name为空，再使用interfaceClassName
-                    //todo 后续逻辑向注册中心注册服务，同时向handlerMap中记录标记了RpcService注解的类实例
-                    LOGGER.info("当前标注了@RpcService注解的类实例名称==>>> " + clazz.getName());
-                    LOGGER.info("@RpcService注解上标记的信息如下：");
-                    LOGGER.info("interfaceClass===>>> " + rpcService.interfaceClass().getName());
-                    LOGGER.info("interfaceClassName===>>> " + rpcService.interfaceClassName());
-                    LOGGER.info("version===>>> " + rpcService.version());
-                    LOGGER.info("group===>>> " + rpcService.group());
+//                    //todo 后续逻辑向注册中心注册服务，同时向handlerMap中记录标记了RpcService注解的类实例
+//                    LOGGER.info("当前标注了@RpcService注解的类实例名称==>>> " + clazz.getName());
+//                    LOGGER.info("@RpcService注解上标记的信息如下：");
+//                    LOGGER.info("interfaceClass===>>> " + rpcService.interfaceClass().getName());
+//                    LOGGER.info("interfaceClassName===>>> " + rpcService.interfaceClassName());
+//                    LOGGER.info("version===>>> " + rpcService.version());
+//                    LOGGER.info("group===>>> " + rpcService.group());
+                    String serviceName = getServiceName(rpcService);
+                    String key = serviceName.concat(rpcService.version()).concat(rpcService.group());
+                    handlerMap.put(key,clazz.newInstance());
                 }
             } catch (Exception e){
                 LOGGER.error("scan classes throws exception: {}",e);
             }
         });
         return handlerMap;
+    }
+
+    private static String getServiceName(RpcService rpcService){
+        Class<?> clazz = rpcService.interfaceClass();
+        if (clazz == void.class){
+            return rpcService.interfaceClassName();
+        }
+        String serviceName = clazz.getName();
+        if (serviceName == null || serviceName.trim().isEmpty()){
+            serviceName = rpcService.interfaceClassName();
+        }
+        return serviceName;
     }
 }
