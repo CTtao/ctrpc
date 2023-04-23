@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * @author CT
  * @version 1.0.0
- * @description
+ * @description 基础服务
  */
 public class BaseServer implements Server {
     private final Logger logger = LoggerFactory.getLogger(BaseServer.class);

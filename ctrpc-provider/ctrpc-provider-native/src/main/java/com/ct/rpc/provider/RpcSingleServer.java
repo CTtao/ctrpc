@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author CT
  * @version 1.0.0
- * @description
+ * @description 以Java原生方式启动启动Rpc
  */
 public class RpcSingleServer extends BaseServer {
     private final Logger logger = LoggerFactory.getLogger(RpcSingleServer.class);

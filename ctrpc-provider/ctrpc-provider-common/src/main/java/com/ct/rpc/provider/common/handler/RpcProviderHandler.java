@@ -10,11 +10,16 @@ import java.util.Map;
 /**
  * @author CT
  * @version 1.0.0
- * @description
+ * @description RPC服务提供者的Handler处理类
  */
 public class RpcProviderHandler extends SimpleChannelInboundHandler<Object> {
     private final Logger logger = LoggerFactory.getLogger(RpcProviderHandler.class);
 
+    /**
+     * 存储服务提供者中被@RpcService注解标注的类的对象
+     * key为：serviceName#serviceVersion#group
+     * value为：@RpcService注解标注的类的对象
+     */
     private final Map<String, Object> handlerMap;
 
     public RpcProviderHandler(Map<String, Object> handlerMap){
