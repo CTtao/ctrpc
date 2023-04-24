@@ -36,12 +36,15 @@ public class BaseServer implements Server {
 
     protected Map<String, Object> handlerMap = new HashMap<>();
 
-    public BaseServer(String serverAddress){
+    private String reflectType;
+
+    public BaseServer(String serverAddress, String reflectType){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
             this.port = Integer.parseInt(serverArray[1]);
         }
+        this.reflectType = reflectType;
     }
 
 
@@ -59,7 +62,7 @@ public class BaseServer implements Server {
                                     //todo 预留编解码，需要实现自定义协议
                                     .addLast(new RpcDecoder())
                                     .addLast(new RpcEncoder())
-                                    .addLast(new RpcProviderHandler(handlerMap));
+                                    .addLast(new RpcProviderHandler(reflectType, handlerMap));
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
