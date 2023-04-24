@@ -17,6 +17,12 @@
             <artifactId>ctrpc-provider-native</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-test-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

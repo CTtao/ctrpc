@@ -15,6 +15,7 @@
         <module>ctrpc-test-scanner</module>
         <module>ctrpc-test-provider</module>
         <module>ctrpc-test-consumer</module>
+        <module>ctrpc-test-api</module>
     </modules>
 
     <dependencies>

@@ -14,7 +14,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 public class RpcTestConsumer {
     public static void main(String[] args) throws InterruptedException{
         Bootstrap bootstrap = new Bootstrap();
-        EventLoopGroup eventLoopGroup =  new NioEventLoopGroup();
+        EventLoopGroup eventLoopGroup =  new NioEventLoopGroup(4);
         try {
             bootstrap.group(eventLoopGroup)
                     .channel(NioSocketChannel.class)
