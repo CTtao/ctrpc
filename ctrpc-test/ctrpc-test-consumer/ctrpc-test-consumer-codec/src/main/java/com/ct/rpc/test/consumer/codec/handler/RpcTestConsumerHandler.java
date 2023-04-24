@@ -43,4 +43,9 @@ public class RpcTestConsumerHandler extends SimpleChannelInboundHandler<RpcProto
     protected void channelRead0(ChannelHandlerContext ctx, RpcProtocol<RpcResponse> protocol) throws Exception {
         logger.info("服务消费者接收到的数据===>>>{}", JSONObject.toJSONString(protocol));
     }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        super.channelRead(ctx, msg);
+    }
 }

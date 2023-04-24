@@ -66,7 +66,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
             ctx.writeAndFlush(responseRpcProtocol).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                    logger.debug("Send response for requeset" + header.getRequestId());
+                    logger.debug("Send response for request" + header.getRequestId());
                 }
             });
         });

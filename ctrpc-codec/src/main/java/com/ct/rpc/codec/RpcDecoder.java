@@ -11,6 +11,7 @@ import com.ct.rpc.serialization.api.Serialization;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.util.CharsetUtil;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class RpcDecoder extends ByteToMessageDecoder implements RpcCodec {
 
         ByteBuf serializationTypeByteBuf = in.readBytes(SerializationUtils.MAX_SERIALIZATION_TYPE_COUNT);
 
-        String serializationType = SerializationUtils.subString(serializationTypeByteBuf.toString());
+        String serializationType = SerializationUtils.subString(serializationTypeByteBuf.toString(CharsetUtil.UTF_8));
 
         int dataLength = in.readInt();
         if (in.readableBytes() < dataLength){
