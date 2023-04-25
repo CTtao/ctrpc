@@ -1,6 +1,7 @@
 package com.ct.rpc.consumer.common.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ct.rpc.consumer.common.future.RpcFuture;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.header.RpcHeader;
 import com.ct.rpc.protocol.request.RpcRequest;
@@ -28,7 +29,7 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
     private SocketAddress remotePeer;
 
     //请求ID与RpcResponse协议的映射关系
-    private Map<Long, RpcProtocol<RpcResponse>> pendingResponse = new ConcurrentHashMap<>();
+    private Map<Long, RpcFuture> pendingRPC = new ConcurrentHashMap<>();
 
     public Channel getChannel() {
         return channel;
@@ -63,23 +64,26 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         logger.info("服务消费者接收到的数据===>>>{}", JSONObject.toJSONString(protocol));
         RpcHeader header = protocol.getHeader();
         long requestId = header.getRequestId();
-        pendingResponse.put(requestId, protocol);
-    }
-
-    public Object sendRequest(RpcProtocol<RpcRequest> protocol){
-        logger.info("服务消费者发送的数据===>>>{}", JSONObject.toJSONString(protocol));
-        channel.writeAndFlush(protocol);
-        RpcHeader header = protocol.getHeader();
-        long requestId = header.getRequestId();
-        //异步转同步
-        while (true){
-            RpcProtocol<RpcResponse> responseRpcProtocol = pendingResponse.remove(requestId);
-            if (responseRpcProtocol != null){
-                return responseRpcProtocol.getBody().getResult();
-            }
+        RpcFuture rpcFuture = pendingRPC.remove(requestId);
+        if (rpcFuture != null){
+            rpcFuture.done(protocol);
         }
     }
 
+    public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol){
+        logger.info("服务消费者发送的数据===>>>{}", JSONObject.toJSONString(protocol));
+        RpcFuture rpcFuture = this.getRpcFuture(protocol);
+        channel.writeAndFlush(protocol);
+        return rpcFuture;
+    }
+
+    private RpcFuture getRpcFuture(RpcProtocol<RpcRequest> protocol){
+        RpcFuture rpcFuture = new RpcFuture(protocol);
+        RpcHeader header = protocol.getHeader();
+        long requestId = header.getRequestId();
+        pendingRPC.put(requestId, rpcFuture);
+        return rpcFuture;
+    }
     public void close(){
         channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }

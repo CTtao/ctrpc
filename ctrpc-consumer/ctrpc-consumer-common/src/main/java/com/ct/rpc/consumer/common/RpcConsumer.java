@@ -1,5 +1,6 @@
 package com.ct.rpc.consumer.common;
 
+import com.ct.rpc.consumer.common.future.RpcFuture;
 import com.ct.rpc.consumer.common.handler.RpcConsumerHandler;
 import com.ct.rpc.consumer.common.initializer.RpcConsumerInitializer;
 import com.ct.rpc.protocol.RpcProtocol;
@@ -52,7 +53,7 @@ public class RpcConsumer {
         eventLoopGroup.shutdownGracefully();
     }
 
-    public Object sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception{
+    public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception{
         //todo 暂时写死，待引入注册中心
         String serverAddress = "127.0.0.1";
         int port = 27880;
