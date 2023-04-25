@@ -17,6 +17,7 @@
         <module>ctrpc-constants</module>
         <module>ctrpc-serialization</module>
         <module>ctrpc-codec</module>
+        <module>ctrpc-consumer</module>
     </modules>
 
     <properties>

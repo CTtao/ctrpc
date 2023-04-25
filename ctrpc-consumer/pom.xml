@@ -3,17 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ctrpc-test</artifactId>
+        <artifactId>ctrpc</artifactId>
         <groupId>com.ct</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ctrpc-test-consumer</artifactId>
+    <artifactId>ctrpc-consumer</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>ctrpc-test-consumer-codec</module>
-        <module>ctrpc-test-consumer-handler</module>
+        <module>ctrpc-consumer-common</module>
     </modules>
 
 </project>
