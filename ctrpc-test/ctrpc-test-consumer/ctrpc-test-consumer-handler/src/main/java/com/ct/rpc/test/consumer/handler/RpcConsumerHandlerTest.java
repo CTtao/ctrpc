@@ -4,6 +4,8 @@ import com.ct.rpc.consumer.common.RpcConsumer;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.header.RpcHeaderFactory;
 import com.ct.rpc.protocol.request.RpcRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author CT
@@ -11,10 +13,12 @@ import com.ct.rpc.protocol.request.RpcRequest;
  * @description
  */
 public class RpcConsumerHandlerTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RpcConsumerHandlerTest.class);
+
     public static void main(String[] args) throws Exception{
         RpcConsumer consumer = RpcConsumer.getInstance();
-        consumer.sendRequest(getRpcRequestProtocol());
-        Thread.sleep(2000);
+        Object result = consumer.sendRequest(getRpcRequestProtocol());
+        LOGGER.info("从服务消费者获取到的数据===>>>" + result.toString());
         consumer.close();
     }
 
