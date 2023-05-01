@@ -1,6 +1,7 @@
 package com.ct.rpc.test.consumer.handler;
 
 import com.ct.rpc.consumer.common.RpcConsumer;
+import com.ct.rpc.consumer.common.callback.AsyncRpcCallback;
 import com.ct.rpc.consumer.common.context.RpcContext;
 import com.ct.rpc.consumer.common.future.RpcFuture;
 import com.ct.rpc.protocol.RpcProtocol;
@@ -21,7 +22,18 @@ public class RpcConsumerHandlerTest {
         RpcConsumer consumer = RpcConsumer.getInstance();
         //1.同步调用
         RpcFuture future = consumer.sendRequest(getRpcRequestProtocol());
-        LOGGER.info("从服务消费者获取到的数据===>>>" + future.get());
+        future.addCallback(new AsyncRpcCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                LOGGER.info("从服务消费者获取到的数据===>>>" + result);
+            }
+
+            @Override
+            public void onException(Exception e) {
+                LOGGER.info("抛出了异常===>>>" + e);
+            }
+        });
+        Thread.sleep(200);
         //2.异步调用
 //        consumer.sendRequest(getRpcRequestProtocol());
 ////        RpcFuture future = RpcContext.getContext().getRpcFuture();
