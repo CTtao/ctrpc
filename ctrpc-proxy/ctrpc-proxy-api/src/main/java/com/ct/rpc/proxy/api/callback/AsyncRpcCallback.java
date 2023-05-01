@@ -1,4 +1,4 @@
-package com.ct.rpc.consumer.common.callback;
+package com.ct.rpc.proxy.api.callback;
 
 /**
  * @author CT

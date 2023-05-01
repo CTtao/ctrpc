@@ -1,7 +1,7 @@
-package com.ct.rpc.consumer.common.future;
+package com.ct.rpc.proxy.api.future;
 
 import com.ct.rpc.common.threadpool.ClientThreadPool;
-import com.ct.rpc.consumer.common.callback.AsyncRpcCallback;
+import com.ct.rpc.proxy.api.callback.AsyncRpcCallback;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.request.RpcRequest;
 import com.ct.rpc.protocol.response.RpcResponse;

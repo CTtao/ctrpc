@@ -1,7 +1,8 @@
 package com.ct.rpc.consumer.common;
 
 import com.ct.rpc.common.threadpool.ClientThreadPool;
-import com.ct.rpc.consumer.common.future.RpcFuture;
+import com.ct.rpc.proxy.api.consumer.Consumer;
+import com.ct.rpc.proxy.api.future.RpcFuture;
 import com.ct.rpc.consumer.common.handler.RpcConsumerHandler;
 import com.ct.rpc.consumer.common.initializer.RpcConsumerInitializer;
 import com.ct.rpc.protocol.RpcProtocol;
@@ -23,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0.0
  * @description
  */
-public class RpcConsumer {
+public class RpcConsumer implements Consumer {
     private final Logger logger = LoggerFactory.getLogger(RpcConsumer.class);
     private final Bootstrap bootstrap;
     private final EventLoopGroup eventLoopGroup;
@@ -55,6 +56,7 @@ public class RpcConsumer {
         ClientThreadPool.shutdown();
     }
 
+    @Override
     public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception{
         //todo 暂时写死，待引入注册中心
         String serverAddress = "127.0.0.1";

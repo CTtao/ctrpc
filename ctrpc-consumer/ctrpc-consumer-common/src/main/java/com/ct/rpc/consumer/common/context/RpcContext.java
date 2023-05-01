@@ -1,6 +1,6 @@
 package com.ct.rpc.consumer.common.context;
 
-import com.ct.rpc.consumer.common.future.RpcFuture;
+import com.ct.rpc.proxy.api.future.RpcFuture;
 
 /**
  * @author CT

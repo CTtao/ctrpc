@@ -1,9 +1,8 @@
 package com.ct.rpc.test.consumer.handler;
 
 import com.ct.rpc.consumer.common.RpcConsumer;
-import com.ct.rpc.consumer.common.callback.AsyncRpcCallback;
-import com.ct.rpc.consumer.common.context.RpcContext;
-import com.ct.rpc.consumer.common.future.RpcFuture;
+import com.ct.rpc.proxy.api.callback.AsyncRpcCallback;
+import com.ct.rpc.proxy.api.future.RpcFuture;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.header.RpcHeaderFactory;
 import com.ct.rpc.protocol.request.RpcRequest;

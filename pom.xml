@@ -18,6 +18,7 @@
         <module>ctrpc-serialization</module>
         <module>ctrpc-codec</module>
         <module>ctrpc-consumer</module>
+        <module>ctrpc-proxy</module>
     </modules>
 
     <properties>
