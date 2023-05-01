@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>ctrpc-consumer-common</module>
+        <module>ctrpc-consumer-native</module>
     </modules>
 
 </project>
