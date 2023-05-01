@@ -1,6 +1,8 @@
 package com.ct.rpc.consumer;
 
 import com.ct.rpc.consumer.common.RpcConsumer;
+import com.ct.rpc.proxy.api.async.IAsyncObjectProxy;
+import com.ct.rpc.proxy.api.object.ObjectProxy;
 import com.ct.rpc.proxy.jdk.JdkProxyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,9 @@ public class RpcClient {
         return jdkProxyFactory.getProxy(interfaceClass);
     }
 
+    public <T> IAsyncObjectProxy createAsync(Class<T> interfaceClass){
+        return new ObjectProxy<T>(interfaceClass, serviceVersion, serviceGroup, timeout, RpcConsumer.getInstance(), serializationType, async, oneway);
+    }
     public void shutdown(){
         RpcConsumer.getInstance().close();
     }
