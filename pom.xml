@@ -19,6 +19,7 @@
         <module>ctrpc-codec</module>
         <module>ctrpc-consumer</module>
         <module>ctrpc-proxy</module>
+        <module>ctrpc-registry</module>
     </modules>
 
     <properties>

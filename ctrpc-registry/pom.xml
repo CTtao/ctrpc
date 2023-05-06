@@ -9,22 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ctrpc-test</artifactId>
+    <artifactId>ctrpc-registry</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>ctrpc-test-scanner</module>
-        <module>ctrpc-test-provider</module>
-        <module>ctrpc-test-consumer</module>
-        <module>ctrpc-test-api</module>
-        <module>ctrpc-test-registry</module>
+        <module>ctrpc-registry-api</module>
+        <module>ctrpc-registry-zookeeper</module>
     </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-        </dependency>
-    </dependencies>
 
 </project>
