@@ -1,6 +1,6 @@
 package com.ct.rpc.provider;
 
-import com.ct.rpc.common.scanner.server.RpcServiceScanner;
+import com.ct.rpc.provider.common.scanner.RpcServiceScanner;
 import com.ct.rpc.provider.common.server.base.BaseServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +13,10 @@ import org.slf4j.LoggerFactory;
 public class RpcSingleServer extends BaseServer {
     private final Logger logger = LoggerFactory.getLogger(RpcSingleServer.class);
 
-    public RpcSingleServer(String serverAddress, String scanPackage, String reflectType) {
-        super(serverAddress, reflectType);
+    public RpcSingleServer(String serverAddress, String registerAddress, String registerType, String scanPackage, String reflectType) {
+        super(serverAddress, registerAddress, registerType, reflectType);
         try {
-            this.handlerMap = RpcServiceScanner.doScannerWithRpcServiceAnnotationFilterAndRegistryService(scanPackage);
+            this.handlerMap = RpcServiceScanner.doScannerWithRpcServiceAnnotationFilterAndRegistryService(this.host, this.port, scanPackage, registryService);
         } catch (Exception e){
             logger.error("RPC server init error", e);
         }

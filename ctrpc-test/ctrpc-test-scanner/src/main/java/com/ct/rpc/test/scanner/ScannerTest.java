@@ -2,7 +2,7 @@ package com.ct.rpc.test.scanner;
 
 import com.ct.rpc.common.scanner.ClassScanner;
 import com.ct.rpc.common.scanner.reference.RpcReferenceScanner;
-import com.ct.rpc.common.scanner.server.RpcServiceScanner;
+import com.ct.rpc.provider.common.scanner.RpcServiceScanner;
 import org.junit.Test;
 
 import java.util.List;
