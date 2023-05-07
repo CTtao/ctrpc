@@ -1,10 +1,14 @@
 package com.ct.rpc.serialization.api;
 
+import com.ct.rpc.constants.RpcConstants;
+import com.ct.rpc.spi.annotation.SPI;
+
 /**
  * @author CT
  * @version 1.0.0
  * @description 序列化接口
  */
+@SPI(RpcConstants.SERIALIZATION_JDK)
 public interface Serialization {
 
     /**
