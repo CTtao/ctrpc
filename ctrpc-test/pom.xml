@@ -17,6 +17,7 @@
         <module>ctrpc-test-consumer</module>
         <module>ctrpc-test-api</module>
         <module>ctrpc-test-registry</module>
+        <module>ctrpc-test-spi</module>
     </modules>
 
     <dependencies>

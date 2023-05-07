@@ -21,6 +21,7 @@
         <module>ctrpc-proxy</module>
         <module>ctrpc-registry</module>
         <module>ctrpc-loadbalancer</module>
+        <module>ctrpc-spi</module>
     </modules>
 
     <properties>
