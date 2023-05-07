@@ -20,6 +20,7 @@
         <module>ctrpc-consumer</module>
         <module>ctrpc-proxy</module>
         <module>ctrpc-registry</module>
+        <module>ctrpc-loadbalancer</module>
     </modules>
 
     <properties>
