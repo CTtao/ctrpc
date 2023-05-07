@@ -27,6 +27,11 @@
             <artifactId>ctrpc-serialization-json</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-serialization-hessian2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

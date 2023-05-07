@@ -15,6 +15,7 @@
         <module>ctrpc-serialization-api</module>
         <module>ctrpc-serialization-jdk</module>
         <module>ctrpc-serialization-json</module>
+        <module>ctrpc-serialization-hessian2</module>
     </modules>
 
 
