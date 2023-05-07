@@ -14,6 +14,7 @@
     <modules>
         <module>ctrpc-serialization-api</module>
         <module>ctrpc-serialization-jdk</module>
+        <module>ctrpc-serialization-json</module>
     </modules>
 
 

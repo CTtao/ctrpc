@@ -33,7 +33,7 @@ public class RpcConsumerNativeTest {
                 "zookeeper",
                 "1.0.0",
                 "ct",
-                "jdk",
+                "json",
                 3000,
                 false,
                 false);
