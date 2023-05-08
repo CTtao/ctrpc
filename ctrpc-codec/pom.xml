@@ -42,6 +42,11 @@
             <artifactId>ctrpc-serialization-kryo</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-serialization-protostuff</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
