@@ -17,6 +17,7 @@
         <module>ctrpc-serialization-json</module>
         <module>ctrpc-serialization-hessian2</module>
         <module>ctrpc-serialization-fst</module>
+        <module>ctrpc-serialization-kryo</module>
     </modules>
 
 
