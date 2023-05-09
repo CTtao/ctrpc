@@ -3,33 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ctrpc-consumer</artifactId>
+        <artifactId>ctrpc-proxy</artifactId>
         <groupId>com.ct</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ctrpc-consumer-common</artifactId>
+    <artifactId>ctrpc-proxy-cglib</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.ct</groupId>
-            <artifactId>ctrpc-codec</artifactId>
+            <artifactId>ctrpc-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ct</groupId>
-            <artifactId>ctrpc-proxy-jdk</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ct</groupId>
-            <artifactId>ctrpc-proxy-cglib</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ct</groupId>
-            <artifactId>ctrpc-registry-zookeeper</artifactId>
+            <artifactId>ctrpc-proxy-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
