@@ -1,12 +1,14 @@
 package com.ct.rpc.proxy.api;
 
 import com.ct.rpc.proxy.api.config.ProxyConfig;
+import com.ct.rpc.spi.annotation.SPI;
 
 /**
  * @author CT
  * @version 1.0.0
  * @description 动态代理工厂类
  */
+@SPI
 public interface ProxyFactory {
 
     /**
