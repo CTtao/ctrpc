@@ -1,0 +1,1 @@
+javassist=com.ct.rpc.proxy.javassist.JavassistProxyFactory

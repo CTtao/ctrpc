@@ -15,6 +15,7 @@
         <module>ctrpc-proxy-api</module>
         <module>ctrpc-proxy-jdk</module>
         <module>ctrpc-proxy-cglib</module>
+        <module>ctrpc-proxy-javassist</module>
     </modules>
 
 
