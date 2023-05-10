@@ -16,6 +16,7 @@
         <module>ctrpc-proxy-jdk</module>
         <module>ctrpc-proxy-cglib</module>
         <module>ctrpc-proxy-javassist</module>
+        <module>ctrpc-proxy-bytebuddy</module>
     </modules>
 
 
