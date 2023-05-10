@@ -29,17 +29,22 @@
         </dependency>
         <dependency>
             <groupId>com.ct</groupId>
-            <artifactId>ctrpc-registry-zookeeper</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ct</groupId>
             <artifactId>ctrpc-proxy-javassist</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ct</groupId>
             <artifactId>ctrpc-proxy-bytebuddy</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-proxy-asm</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-registry-zookeeper</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
