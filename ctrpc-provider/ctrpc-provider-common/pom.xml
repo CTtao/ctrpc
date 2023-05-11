@@ -28,6 +28,11 @@
             <artifactId>ctrpc-reflect-jdk</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-reflect-cglib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 
