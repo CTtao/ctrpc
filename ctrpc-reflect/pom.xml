@@ -16,6 +16,7 @@
         <module>ctrpc-reflect-jdk</module>
         <module>ctrpc-reflect-cglib</module>
         <module>ctrpc-reflect-javassist</module>
+        <module>ctrpc-reflect-bytebuddy</module>
     </modules>
 
 

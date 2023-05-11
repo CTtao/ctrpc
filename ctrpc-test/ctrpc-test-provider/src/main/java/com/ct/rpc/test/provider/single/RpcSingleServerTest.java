@@ -15,7 +15,7 @@ public class RpcSingleServerTest {
                 "127.0.0.1:2181",
                 "zookeeper",
                 "com.ct.rpc.test",
-                "javassist");
+                "bytebuddy");
         singleServer.startNettyServer();
     }
 }
