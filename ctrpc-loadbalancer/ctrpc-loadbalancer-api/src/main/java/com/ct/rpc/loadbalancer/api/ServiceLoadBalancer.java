@@ -1,5 +1,8 @@
 package com.ct.rpc.loadbalancer.api;
 
+import com.ct.rpc.constants.RpcConstants;
+import com.ct.rpc.spi.annotation.SPI;
+
 import java.util.List;
 
 /**
@@ -7,6 +10,7 @@ import java.util.List;
  * @version 1.0.0
  * @description 负载均衡接口
  */
+@SPI(RpcConstants.SERVICE_LOAD_BALANCER_RANDOM)
 public interface ServiceLoadBalancer<T> {
     /**
      * 以负载均衡的方式选取一个服务节点

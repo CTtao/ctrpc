@@ -1,6 +1,7 @@
 package com.ct.rpc.loadbalancer.random;
 
 import com.ct.rpc.loadbalancer.api.ServiceLoadBalancer;
+import com.ct.rpc.spi.annotation.SPIClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,7 @@ import java.util.Random;
  * @version 1.0.0
  * @description
  */
+@SPIClass
 public class RandomServiceLoadBalancer<T> implements ServiceLoadBalancer<T> {
     private final Logger logger = LoggerFactory.getLogger(RandomServiceLoadBalancer.class);
 

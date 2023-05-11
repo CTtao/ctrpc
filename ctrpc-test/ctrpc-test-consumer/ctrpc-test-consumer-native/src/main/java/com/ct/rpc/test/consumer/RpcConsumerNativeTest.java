@@ -18,7 +18,7 @@ public class RpcConsumerNativeTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcConsumerNativeTest.class);
 
     public static void main(String[] args) throws Exception{
-        RpcClient rpcClient = new RpcClient("127.0.0.1", "zookeeper","jdk","1.0.0", "ct", "jdk", 3000, false, false);
+        RpcClient rpcClient = new RpcClient("127.0.0.1", "zookeeper","random", "jdk","1.0.0", "ct", "jdk", 3000, false, false);
         IAsyncObjectProxy demoService = rpcClient.createAsync(DemoService.class);
         RpcFuture future = demoService.call("hello","ct");
         LOGGER.info("返回的结果数据为===>>>" + future.get());
@@ -31,6 +31,7 @@ public class RpcConsumerNativeTest {
     public void initRpcClient(){
         rpcClient = new RpcClient("127.0.0.1:2181",
                 "zookeeper",
+                "random",
                 "asm",
                 "1.0.0",
                 "ct",

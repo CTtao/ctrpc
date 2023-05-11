@@ -6,6 +6,7 @@ import com.ct.rpc.loadbalancer.random.RandomServiceLoadBalancer;
 import com.ct.rpc.protocol.meta.ServiceMeta;
 import com.ct.rpc.registry.api.RegistryService;
 import com.ct.rpc.registry.api.config.RegistryConfig;
+import com.ct.rpc.spi.loader.ExtensionLoader;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
@@ -48,8 +49,8 @@ public class ZookeeperRegistryService implements RegistryService {
                 .basePath(ZK_BASE_PATH)
                 .build();
         this.serviceDiscovery.start();
-        //todo 负载策略默认选择随机
-        this.serviceLoadBalancer = new RandomServiceLoadBalancer<>();
+        //负载均衡策略根据SPI加载
+        this.serviceLoadBalancer = ExtensionLoader.getExtension(ServiceLoadBalancer.class, registryConfig.getRegistryLoadBalanceType());
     }
 
     @Override
