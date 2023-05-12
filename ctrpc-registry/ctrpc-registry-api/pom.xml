@@ -32,6 +32,11 @@
             <artifactId>ctrpc-loadbalancer-round-robin</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-loadbalancer-round-robin-weight</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

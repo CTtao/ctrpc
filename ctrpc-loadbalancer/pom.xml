@@ -16,6 +16,7 @@
         <module>ctrpc-loadbalancer-random</module>
         <module>ctrpc-loadbalancer-random-weight</module>
         <module>ctrpc-loadbalancer-round-robin</module>
+        <module>ctrpc-loadbalancer-round-robin-weight</module>
     </modules>
 
 
