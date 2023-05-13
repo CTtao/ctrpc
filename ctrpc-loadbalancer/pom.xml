@@ -18,6 +18,7 @@
         <module>ctrpc-loadbalancer-round-robin</module>
         <module>ctrpc-loadbalancer-round-robin-weight</module>
         <module>ctrpc-loadbalancer-hash</module>
+        <module>ctrpc-loadbalancer-hash-weight</module>
     </modules>
 
 
