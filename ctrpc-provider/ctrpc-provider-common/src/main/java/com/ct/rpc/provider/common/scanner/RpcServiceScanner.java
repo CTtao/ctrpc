@@ -3,6 +3,7 @@ package com.ct.rpc.provider.common.scanner;
 import com.ct.rpc.annotation.RpcService;
 import com.ct.rpc.common.helper.RpcServiceHelper;
 import com.ct.rpc.common.scanner.ClassScanner;
+import com.ct.rpc.constants.RpcConstants;
 import com.ct.rpc.protocol.meta.ServiceMeta;
 import com.ct.rpc.registry.api.RegistryService;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class RpcServiceScanner extends ClassScanner {
                 if (rpcService != null){
                     //优先使用interfaceClass，interfaceClass的name为空，再使用interfaceClassName
                     // 向注册中心注册服务，同时向handlerMap中记录标记了RpcService注解的类实例
-                    ServiceMeta serviceMeta = new ServiceMeta(getServiceName(rpcService), rpcService.version(), rpcService.group(), host, port);
+                    ServiceMeta serviceMeta = new ServiceMeta(getServiceName(rpcService), rpcService.version(), rpcService.group(), host, port, getWeight(rpcService.weight()));
                     registryService.register(serviceMeta);
                     handlerMap.put(
                             RpcServiceHelper.buildServiceKey(
@@ -51,6 +52,16 @@ public class RpcServiceScanner extends ClassScanner {
             }
         });
         return handlerMap;
+    }
+
+    private static int getWeight(int weight){
+        if (weight < RpcConstants.SERVICE_WEIGHT_MIN){
+            weight = RpcConstants.SERVICE_WEIGHT_MIN;
+        }
+        if (weight > RpcConstants.SERVICE_WEIGHT_MAX){
+            weight = RpcConstants.SERVICE_WEIGHT_MAX;
+        }
+        return weight;
     }
 
     private static String getServiceName(RpcService rpcService){

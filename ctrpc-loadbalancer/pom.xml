@@ -22,6 +22,7 @@
         <module>ctrpc-loadbalancer-sourceip-hash</module>
         <module>ctrpc-loadbalancer-sourceip-hash-weight</module>
         <module>ctrpc-loadbalancer-consistenthash-zk</module>
+        <module>ctrpc-loadbalancer-random-weight-enhanced</module>
     </modules>
 
 

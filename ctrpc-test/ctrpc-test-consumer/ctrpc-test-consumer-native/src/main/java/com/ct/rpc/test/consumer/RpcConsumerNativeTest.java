@@ -31,7 +31,7 @@ public class RpcConsumerNativeTest {
     public void initRpcClient(){
         rpcClient = new RpcClient("127.0.0.1:2181",
                 "zookeeper",
-                "zkconsistenthash",
+                "enhanced_randomweight",
                 "asm",
                 "1.0.0",
                 "ct",
