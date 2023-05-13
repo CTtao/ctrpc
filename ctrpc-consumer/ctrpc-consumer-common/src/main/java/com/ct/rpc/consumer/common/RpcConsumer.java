@@ -1,6 +1,7 @@
 package com.ct.rpc.consumer.common;
 
 import com.ct.rpc.common.helper.RpcServiceHelper;
+import com.ct.rpc.common.ip.IPUtils;
 import com.ct.rpc.common.threadpool.ClientThreadPool;
 import com.ct.rpc.consumer.common.helper.RpcConsumerHandlerHelper;
 import com.ct.rpc.protocol.meta.ServiceMeta;
@@ -33,11 +34,14 @@ public class RpcConsumer implements Consumer {
     private final Bootstrap bootstrap;
     private final EventLoopGroup eventLoopGroup;
 
+    private final String localIP;
+
     private static volatile RpcConsumer instance;
 
     private static Map<String, RpcConsumerHandler> handlerMap = new ConcurrentHashMap<>();
 
     private RpcConsumer(){
+        localIP = IPUtils.getLocalHostIP();
         bootstrap = new Bootstrap();
         eventLoopGroup = new NioEventLoopGroup(4);
         bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
@@ -67,7 +71,7 @@ public class RpcConsumer implements Consumer {
         String serviceKey = RpcServiceHelper.buildServiceKey(request.getClassName(), request.getVersion(), request.getGroup());
         Object[] params = request.getParameters();
         int invokeHashcode = (params == null) || params.length <= 0 ? serviceKey.hashCode() : params[0].hashCode();
-        ServiceMeta serviceMeta = registryService.discovery(serviceKey, invokeHashcode);
+        ServiceMeta serviceMeta = registryService.discovery(serviceKey, invokeHashcode, localIP);
         if (serviceMeta != null){
             RpcConsumerHandler handler = RpcConsumerHandlerHelper.get(serviceMeta);
             //若缓存中没有handler
