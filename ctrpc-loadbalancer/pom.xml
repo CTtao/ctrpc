@@ -24,6 +24,7 @@
         <module>ctrpc-loadbalancer-consistenthash-zk</module>
         <module>ctrpc-loadbalancer-random-weight-enhanced</module>
         <module>ctrpc-loadbalancer-round-robin-weight-enhanced</module>
+        <module>ctrpc-loadbalancer-hash-weight-enhanced</module>
     </modules>
 
 
