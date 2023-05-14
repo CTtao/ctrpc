@@ -77,6 +77,11 @@
             <artifactId>ctrpc-loadbalancer-hash-weight-enhanced</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-loadbalancer-sourceip-hash-weight-enhanced</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
