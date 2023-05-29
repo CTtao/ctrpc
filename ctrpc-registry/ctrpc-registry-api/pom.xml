@@ -87,6 +87,11 @@
             <artifactId>ctrpc-loadbalancer-consistenthash-zk-enhanced</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-loadbalancer-least-connections</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

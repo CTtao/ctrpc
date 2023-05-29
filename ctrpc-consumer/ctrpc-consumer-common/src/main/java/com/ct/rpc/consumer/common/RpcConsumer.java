@@ -4,6 +4,7 @@ import com.ct.rpc.common.helper.RpcServiceHelper;
 import com.ct.rpc.common.ip.IPUtils;
 import com.ct.rpc.common.threadpool.ClientThreadPool;
 import com.ct.rpc.consumer.common.helper.RpcConsumerHandlerHelper;
+import com.ct.rpc.loadbalancer.context.ConnectionsContext;
 import com.ct.rpc.protocol.meta.ServiceMeta;
 import com.ct.rpc.proxy.api.consumer.Consumer;
 import com.ct.rpc.proxy.api.future.RpcFuture;
@@ -76,12 +77,12 @@ public class RpcConsumer implements Consumer {
             RpcConsumerHandler handler = RpcConsumerHandlerHelper.get(serviceMeta);
             //若缓存中没有handler
             if (handler == null){
-                handler = getRpcConsumerHandler(serviceMeta.getServiceAddr(), serviceMeta.getServicePort());
+                handler = getRpcConsumerHandler(serviceMeta);
                 RpcConsumerHandlerHelper.put(serviceMeta, handler);
             } else if (!handler.getChannel().isActive()){
                 //缓存存在，但不活跃
                 handler.close();
-                handler = getRpcConsumerHandler(serviceMeta.getServiceAddr(),serviceMeta.getServicePort());
+                handler = getRpcConsumerHandler(serviceMeta);
                 RpcConsumerHandlerHelper.put(serviceMeta, handler);
             }
             return handler.sendRequest(protocol, request.isAsync(), request.isOneway());
@@ -91,18 +92,19 @@ public class RpcConsumer implements Consumer {
 
     /**
      * 创建连接并返回RpcConsumerHandler
-     * @param serverAddress 地址
-     * @param port 端口
+     * @param serviceMeta 元数据
      * @return RpcConsumerHandler
      * @throws InterruptedException e
      */
-    private RpcConsumerHandler getRpcConsumerHandler(String serverAddress, int port) throws InterruptedException{
-        ChannelFuture channelFuture = bootstrap.connect(serverAddress, port).sync();
+    private RpcConsumerHandler getRpcConsumerHandler(ServiceMeta serviceMeta) throws InterruptedException{
+        ChannelFuture channelFuture = bootstrap.connect(serviceMeta.getServiceAddr(), serviceMeta.getServicePort()).sync();
         channelFuture.addListener((ChannelFutureListener) listener -> {
             if (channelFuture.isSuccess()){
-                logger.info("connect rpc server {} on port {} success.", serverAddress, port);
+                logger.info("connect rpc server {} on port {} success.", serviceMeta.getServiceAddr(), serviceMeta.getServicePort());
+                //添加连接信息，在服务消费者端记录每个服务提供者实例的连接次数
+                ConnectionsContext.add(serviceMeta);
             } else {
-                logger.error("connect rpc server {} on port {} failed.", serverAddress, port);
+                logger.error("connect rpc server {} on port {} failed.", serviceMeta.getServiceAddr(), serviceMeta.getServicePort());
                 channelFuture.cause().printStackTrace();
                 eventLoopGroup.shutdownGracefully();
             }

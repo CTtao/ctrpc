@@ -27,6 +27,7 @@
         <module>ctrpc-loadbalancer-hash-weight-enhanced</module>
         <module>ctrpc-loadbalancer-sourceip-hash-weight-enhanced</module>
         <module>ctrpc-loadbalancer-consistenthash-zk-enhanced</module>
+        <module>ctrpc-loadbalancer-least-connections</module>
     </modules>
 
 
