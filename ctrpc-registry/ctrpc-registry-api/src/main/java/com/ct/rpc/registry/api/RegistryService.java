@@ -2,6 +2,7 @@ package com.ct.rpc.registry.api;
 
 import com.ct.rpc.protocol.meta.ServiceMeta;
 import com.ct.rpc.registry.api.config.RegistryConfig;
+import com.ct.rpc.spi.annotation.SPI;
 
 import java.io.IOException;
 
@@ -10,6 +11,7 @@ import java.io.IOException;
  * @version 1.0.0
  * @description
  */
+@SPI
 public interface RegistryService {
 
     /** 服务注册

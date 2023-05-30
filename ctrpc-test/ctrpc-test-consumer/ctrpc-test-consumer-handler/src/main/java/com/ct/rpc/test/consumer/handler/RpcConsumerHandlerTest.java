@@ -11,6 +11,7 @@ import com.ct.rpc.protocol.request.RpcRequest;
 import com.ct.rpc.registry.api.RegistryService;
 import com.ct.rpc.registry.api.config.RegistryConfig;
 import com.ct.rpc.registry.zookeeper.ZookeeperRegistryService;
+import com.ct.rpc.spi.loader.ExtensionLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +62,7 @@ public class RpcConsumerHandlerTest {
             throw new IllegalArgumentException("registry type is null");
         }
         //TODO 后续SPI扩展
-        RegistryService registryService = new ZookeeperRegistryService();
+        RegistryService registryService = ExtensionLoader.getExtension(RegistryService.class, registryType);
         try {
             registryService.init(new RegistryConfig(registryAddress, registryType, registryLoadBalanceType));
         } catch (Exception e) {

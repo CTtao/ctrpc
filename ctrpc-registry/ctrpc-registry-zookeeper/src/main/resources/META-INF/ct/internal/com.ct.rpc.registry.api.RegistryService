@@ -1,0 +1,1 @@
+zookeeper=com.ct.rpc.registry.zookeeper.ZookeeperRegistryService

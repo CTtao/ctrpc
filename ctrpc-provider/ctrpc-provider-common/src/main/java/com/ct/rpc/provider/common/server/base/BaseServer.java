@@ -7,6 +7,7 @@ import com.ct.rpc.provider.common.server.api.Server;
 import com.ct.rpc.registry.api.RegistryService;
 import com.ct.rpc.registry.api.config.RegistryConfig;
 import com.ct.rpc.registry.zookeeper.ZookeeperRegistryService;
+import com.ct.rpc.spi.loader.ExtensionLoader;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -56,7 +57,7 @@ public class BaseServer implements Server {
     private RegistryService getRegistryService(String registryAddress, String registryType, String registryLoadBalanceType){
         RegistryService registryService = null;
         try {
-            registryService = new ZookeeperRegistryService();
+            registryService = ExtensionLoader.getExtension(RegistryService.class, registryType);
             registryService.init(new RegistryConfig(registryAddress, registryType,registryLoadBalanceType));
         } catch (Exception e){
             logger.error("RPC server init error", e);

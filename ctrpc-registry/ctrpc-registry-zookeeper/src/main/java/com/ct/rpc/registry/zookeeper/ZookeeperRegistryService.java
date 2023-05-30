@@ -8,6 +8,7 @@ import com.ct.rpc.loadbalancer.random.RandomServiceLoadBalancer;
 import com.ct.rpc.protocol.meta.ServiceMeta;
 import com.ct.rpc.registry.api.RegistryService;
 import com.ct.rpc.registry.api.config.RegistryConfig;
+import com.ct.rpc.spi.annotation.SPIClass;
 import com.ct.rpc.spi.loader.ExtensionLoader;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -27,6 +28,7 @@ import java.util.Random;
  * @version 1.0.0
  * @description
  */
+@SPIClass
 public class ZookeeperRegistryService implements RegistryService {
 
     public static final int BASE_SLEEP_TIME_MS = 1000;
