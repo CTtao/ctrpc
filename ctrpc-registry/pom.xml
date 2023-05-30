@@ -14,6 +14,7 @@
     <modules>
         <module>ctrpc-registry-api</module>
         <module>ctrpc-registry-zookeeper</module>
+        <module>ctrpc-registry-nacos</module>
     </modules>
 
 

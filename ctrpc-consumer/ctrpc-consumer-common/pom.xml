@@ -47,6 +47,11 @@
             <artifactId>ctrpc-registry-zookeeper</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-registry-nacos</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

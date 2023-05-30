@@ -29,9 +29,9 @@ public class RpcConsumerNativeTest {
 
     @Before
     public void initRpcClient(){
-        rpcClient = new RpcClient("127.0.0.1:2181",
-                "zookeeper",
-                "enhanced_leastconnections",
+        rpcClient = new RpcClient("127.0.0.1:8848",
+                "nacos",
+                "random",
                 "asm",
                 "1.0.0",
                 "ct",
