@@ -2,6 +2,7 @@ package com.ct.rpc.consumer.common.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ct.rpc.consumer.common.context.RpcContext;
+import com.ct.rpc.protocol.enumeration.RpcType;
 import com.ct.rpc.proxy.api.future.RpcFuture;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.header.RpcHeader;
@@ -63,7 +64,25 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
             return;
         }
         logger.info("服务消费者接收到的数据===>>>{}", JSONObject.toJSONString(protocol));
+        this.handlerMessage(protocol);
+    }
+
+    private void handlerMessage(RpcProtocol<RpcResponse> protocol){
         RpcHeader header = protocol.getHeader();
+        //心跳消息
+        if (header.getMsgType() == (byte) RpcType.HEARTBEAT.getType()){
+            this.handlerHeartbeatMessage(protocol);
+        } else if (header.getMsgType() == (byte) RpcType.RESPONSE.getType()){
+            this.handlerResponseMessage(protocol, header);
+        }
+    }
+
+    private void handlerHeartbeatMessage(RpcProtocol<RpcResponse> protocol){
+        //简单打印
+        logger.info("receive service provider heartbeat message: {}", protocol.getBody().getResult());
+    }
+
+    private void handlerResponseMessage(RpcProtocol<RpcResponse> protocol, RpcHeader header){
         long requestId = header.getRequestId();
         RpcFuture rpcFuture = pendingRPC.remove(requestId);
         if (rpcFuture != null){

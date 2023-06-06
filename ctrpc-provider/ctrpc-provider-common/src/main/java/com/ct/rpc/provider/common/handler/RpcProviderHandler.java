@@ -52,35 +52,63 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcProtocol<RpcRequest> protocol) throws Exception {
         ServerThreadPool.submit(() -> {
-            RpcHeader header = protocol.getHeader();
-            header.setMsgType((byte) RpcType.RESPONSE.getType());
-
-            RpcRequest request = protocol.getBody();
-            logger.debug("Receive request + " + header.getRequestId());
-
-            RpcProtocol<RpcResponse> responseRpcProtocol = new RpcProtocol<>();
-            RpcResponse response = new RpcResponse();
-            try {
-                Object result = handle(request);
-                response.setResult(result);
-                response.setAsync(request.isAsync());
-                response.setOneway(request.isOneway());
-                header.setStatus((byte) RpcStatus.SUCCESS.getCode());
-            } catch (Throwable t){
-                response.setError(t.toString());
-                header.setStatus((byte) RpcStatus.FAIL.getCode());
-                logger.error("RPC server handle request error");
-            }
-            responseRpcProtocol.setHeader(header);
-            responseRpcProtocol.setBody(response);
-
+            RpcProtocol<RpcResponse> responseRpcProtocol = handlerMessage(protocol);
             ctx.writeAndFlush(responseRpcProtocol).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                    logger.debug("Send response for request" + header.getRequestId());
+                    logger.debug("Send response for request" + protocol.getHeader().getRequestId());
                 }
             });
         });
+    }
+
+    private RpcProtocol<RpcResponse> handlerMessage(RpcProtocol<RpcRequest> protocol){
+        RpcProtocol<RpcResponse> responseRpcProtocol = null;
+        RpcHeader header = protocol.getHeader();
+        if (header.getMsgType() == (byte) RpcType.HEARTBEAT.getType()){
+            //心跳消息
+            responseRpcProtocol = handlerHeartbeatMessage(protocol, header);
+        } else if (header.getMsgType() == (byte) RpcType.REQUEST.getType()){
+            //请求消息
+            responseRpcProtocol = handlerRequestMessage(protocol, header);
+        }
+        return responseRpcProtocol;
+    }
+
+    private RpcProtocol<RpcResponse> handlerHeartbeatMessage(RpcProtocol<RpcRequest> protocol, RpcHeader header){
+        header.setMsgType((byte) RpcType.HEARTBEAT.getType());
+        RpcRequest request = protocol.getBody();
+        RpcProtocol<RpcResponse> responseRpcProtocol = new RpcProtocol<>();
+        RpcResponse response = new RpcResponse();
+        response.setResult(RpcConstants.HEARTBEAT_PONG);
+        response.setAsync(request.isAsync());
+        response.setOneway(request.isOneway());
+        header.setStatus((byte) RpcStatus.SUCCESS.getCode());
+        responseRpcProtocol.setHeader(header);
+        responseRpcProtocol.setBody(response);
+        return responseRpcProtocol;
+    }
+
+    private RpcProtocol<RpcResponse> handlerRequestMessage(RpcProtocol<RpcRequest> protocol, RpcHeader header){
+        header.setMsgType((byte) RpcType.RESPONSE.getType());
+        RpcRequest request = protocol.getBody();
+        logger.debug("Receive request " + header.getRequestId());
+        RpcProtocol<RpcResponse> responseRpcProtocol = new RpcProtocol<>();
+        RpcResponse response = new RpcResponse();
+        try {
+            Object result = handle(request);
+            response.setResult(result);
+            response.setAsync(request.isAsync());
+            response.setOneway(request.isOneway());
+            header.setStatus((byte) RpcStatus.SUCCESS.getCode());
+        } catch (Throwable t){
+            response.setError(t.toString());
+            header.setStatus((byte) RpcStatus.FAIL.getCode());
+            logger.error("RPC server handle request error", t);
+        }
+        responseRpcProtocol.setHeader(header);
+        responseRpcProtocol.setBody(response);
+        return responseRpcProtocol;
     }
 
     /**
