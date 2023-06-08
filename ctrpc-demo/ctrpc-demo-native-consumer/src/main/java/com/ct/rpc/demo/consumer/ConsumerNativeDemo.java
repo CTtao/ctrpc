@@ -34,11 +34,14 @@ public class ConsumerNativeDemo {
     }
 
     @Test
-    public void testInterfaceRpc(){
+    public void testInterfaceRpc() throws InterruptedException{
         DemoService demoService = rpcClient.create(DemoService.class);
         String result = demoService.hello("ct");
         LOGGER.info("返回的结果数据===>>>" + result);
-        rpcClient.shutdown();
+//        rpcClient.shutdown();
+        while (true){
+            Thread.sleep(1000);
+        }
     }
 
     @Test

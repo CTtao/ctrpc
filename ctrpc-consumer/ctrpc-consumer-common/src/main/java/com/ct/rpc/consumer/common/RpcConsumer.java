@@ -4,6 +4,7 @@ import com.ct.rpc.common.helper.RpcServiceHelper;
 import com.ct.rpc.common.ip.IPUtils;
 import com.ct.rpc.common.threadpool.ClientThreadPool;
 import com.ct.rpc.consumer.common.helper.RpcConsumerHandlerHelper;
+import com.ct.rpc.consumer.common.manager.ConsumerConnectionManager;
 import com.ct.rpc.loadbalancer.context.ConnectionsContext;
 import com.ct.rpc.protocol.meta.ServiceMeta;
 import com.ct.rpc.proxy.api.consumer.Consumer;
@@ -24,6 +25,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author CT
@@ -41,12 +45,30 @@ public class RpcConsumer implements Consumer {
 
     private static Map<String, RpcConsumerHandler> handlerMap = new ConcurrentHashMap<>();
 
+    private ScheduledExecutorService executorService;
+
     private RpcConsumer(){
         localIP = IPUtils.getLocalHostIP();
         bootstrap = new Bootstrap();
         eventLoopGroup = new NioEventLoopGroup(4);
         bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
                 .handler(new RpcConsumerInitializer());
+        //todo 启动心跳
+        this.startHeartbeat();
+    }
+
+    private void startHeartbeat(){
+        executorService = Executors.newScheduledThreadPool(2);
+        //扫描并处理所有不活跃的连接
+        executorService.scheduleAtFixedRate(() -> {
+            logger.info("=============scanNotActiveChannel============");
+            ConsumerConnectionManager.scanNotActiveChannel();
+        }, 10, 60, TimeUnit.SECONDS);
+
+        executorService.scheduleAtFixedRate(() -> {
+            logger.info("=============broadcastPingMessageFromConsumer============");
+            ConsumerConnectionManager.broadcastPingMessageFromConsumer();
+        }, 3, 30, TimeUnit.SECONDS);
     }
 
     public static RpcConsumer getInstance(){
@@ -64,6 +86,7 @@ public class RpcConsumer implements Consumer {
         RpcConsumerHandlerHelper.closeRpcClientHandler();
         eventLoopGroup.shutdownGracefully();
         ClientThreadPool.shutdown();
+        executorService.shutdown();
     }
 
     @Override

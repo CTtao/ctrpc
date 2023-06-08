@@ -1,6 +1,7 @@
 package com.ct.rpc.consumer.common.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ct.rpc.consumer.common.cache.ConsumerChannelCache;
 import com.ct.rpc.consumer.common.context.RpcContext;
 import com.ct.rpc.protocol.enumeration.RpcType;
 import com.ct.rpc.proxy.api.future.RpcFuture;
@@ -45,12 +46,25 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         this.remotePeer = this.channel.remoteAddress();
+        ConsumerChannelCache.add(channel);
     }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
         this.channel = ctx.channel();
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        super.channelUnregistered(ctx);
+        ConsumerChannelCache.remove(ctx.channel());
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        ConsumerChannelCache.remove(ctx.channel());
     }
 
     @Override
@@ -64,22 +78,22 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
             return;
         }
         logger.info("服务消费者接收到的数据===>>>{}", JSONObject.toJSONString(protocol));
-        this.handlerMessage(protocol);
+        this.handlerMessage(protocol, channelHandlerContext.channel());
     }
 
-    private void handlerMessage(RpcProtocol<RpcResponse> protocol){
+    private void handlerMessage(RpcProtocol<RpcResponse> protocol, Channel channel){
         RpcHeader header = protocol.getHeader();
         //心跳消息
         if (header.getMsgType() == (byte) RpcType.HEARTBEAT_TO_CONSUMER.getType()){
-            this.handlerHeartbeatMessage(protocol);
+            this.handlerHeartbeatMessage(protocol, channel);
         } else if (header.getMsgType() == (byte) RpcType.RESPONSE.getType()){
             this.handlerResponseMessage(protocol, header);
         }
     }
 
-    private void handlerHeartbeatMessage(RpcProtocol<RpcResponse> protocol){
+    private void handlerHeartbeatMessage(RpcProtocol<RpcResponse> protocol, Channel channel){
         //简单打印
-        logger.info("receive service provider heartbeat message: {}", protocol.getBody().getResult());
+        logger.info("receive service provider heartbeat message, the provider is: {}, the heartbeat message is: {}", channel.remoteAddress(), protocol.getBody().getResult());
     }
 
     private void handlerResponseMessage(RpcProtocol<RpcResponse> protocol, RpcHeader header){
@@ -123,5 +137,6 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
     }
     public void close(){
         channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+        ConsumerChannelCache.remove(channel);
     }
 }
