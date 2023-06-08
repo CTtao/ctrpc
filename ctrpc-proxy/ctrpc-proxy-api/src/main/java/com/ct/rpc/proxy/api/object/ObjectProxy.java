@@ -1,6 +1,7 @@
 package com.ct.rpc.proxy.api.object;
 
 import com.ct.rpc.protocol.RpcProtocol;
+import com.ct.rpc.protocol.enumeration.RpcType;
 import com.ct.rpc.protocol.header.RpcHeaderFactory;
 import com.ct.rpc.protocol.request.RpcRequest;
 import com.ct.rpc.proxy.api.async.IAsyncObjectProxy;
@@ -71,7 +72,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
             }
         }
         RpcProtocol<RpcRequest> requestRpcProtocol = new RpcProtocol<>();
-        requestRpcProtocol.setHeader(RpcHeaderFactory.getRequestHeader(serializationType));
+        requestRpcProtocol.setHeader(RpcHeaderFactory.getRequestHeader(serializationType, RpcType.REQUEST.getType()));
 
         RpcRequest request = new RpcRequest();
         request.setVersion(this.serviceVersion);
@@ -116,7 +117,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
 
     private RpcProtocol<RpcRequest> createRequest(String className, String methodName, Object[] args){
         RpcProtocol<RpcRequest> requestRpcProtocol = new RpcProtocol<>();
-        requestRpcProtocol.setHeader(RpcHeaderFactory.getRequestHeader(serializationType));
+        requestRpcProtocol.setHeader(RpcHeaderFactory.getRequestHeader(serializationType, RpcType.REQUEST.getType()));
 
         RpcRequest request = new RpcRequest();
         request.setClassName(className);

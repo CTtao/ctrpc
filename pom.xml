@@ -23,6 +23,7 @@
         <module>ctrpc-loadbalancer</module>
         <module>ctrpc-spi</module>
         <module>ctrpc-reflect</module>
+        <module>ctrpc-demo</module>
     </modules>
 
     <properties>

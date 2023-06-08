@@ -1,4 +1,5 @@
 import com.ct.rpc.protocol.RpcProtocol;
+import com.ct.rpc.protocol.enumeration.RpcType;
 import com.ct.rpc.protocol.header.RpcHeader;
 import com.ct.rpc.protocol.header.RpcHeaderFactory;
 import com.ct.rpc.protocol.request.RpcRequest;
@@ -10,7 +11,7 @@ import com.ct.rpc.protocol.request.RpcRequest;
  */
 public class Test {
     public static RpcProtocol<RpcRequest> getProtocol(){
-        RpcHeader header = RpcHeaderFactory.getRequestHeader("jdk");
+        RpcHeader header = RpcHeaderFactory.getRequestHeader("jdk", RpcType.REQUEST.getType());
         RpcRequest body = new RpcRequest();
         body.setOneway(false);
         body.setAsync(false);

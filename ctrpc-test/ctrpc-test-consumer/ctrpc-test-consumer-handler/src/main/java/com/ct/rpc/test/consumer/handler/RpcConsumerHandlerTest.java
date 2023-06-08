@@ -3,6 +3,7 @@ package com.ct.rpc.test.consumer.handler;
 import com.ct.rpc.common.exception.RegistryException;
 import com.ct.rpc.consumer.common.RpcConsumer;
 import com.ct.rpc.consumer.common.context.RpcContext;
+import com.ct.rpc.protocol.enumeration.RpcType;
 import com.ct.rpc.proxy.api.callback.AsyncRpcCallback;
 import com.ct.rpc.proxy.api.future.RpcFuture;
 import com.ct.rpc.protocol.RpcProtocol;
@@ -83,7 +84,7 @@ public class RpcConsumerHandlerTest {
     private static RpcProtocol<RpcRequest> getRpcRequestProtocol(){
         //模拟一份发送数据
         RpcProtocol<RpcRequest> protocol = new RpcProtocol<>();
-        protocol.setHeader(RpcHeaderFactory.getRequestHeader("jdk"));
+        protocol.setHeader(RpcHeaderFactory.getRequestHeader("jdk", RpcType.REQUEST.getType()));
         RpcRequest request = new RpcRequest();
         request.setClassName("com.ct.rpc.test.api.DemoService");
         request.setGroup("ct");
