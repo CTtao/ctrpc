@@ -26,7 +26,7 @@ public class RpcConsumerHandlerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcConsumerHandlerTest.class);
 
     public static void main(String[] args) throws Exception{
-        RpcConsumer consumer = RpcConsumer.getInstance();
+        RpcConsumer consumer = RpcConsumer.getInstance(30000, 60000);
         //1.同步调用
         RpcFuture future = consumer.sendRequest(getRpcRequestProtocol(), getRegistryService("127.0.0.1:2181","zookeeper","random"));
         future.addCallback(new AsyncRpcCallback() {
@@ -51,7 +51,7 @@ public class RpcConsumerHandlerTest {
     }
 
     public static void mainAsync(String[] args) throws Exception{
-        RpcConsumer consumer = RpcConsumer.getInstance();
+        RpcConsumer consumer = RpcConsumer.getInstance(30000,60000);
         consumer.sendRequest(getRpcRequestProtocol(), getRegistryService("127.0.0.1:2181","zookeeper","random"));
         RpcFuture future = RpcContext.getContext().getRpcFuture();
         LOGGER.info("从服务消费者获取到的数据===>>>" + future.get());
@@ -74,7 +74,7 @@ public class RpcConsumerHandlerTest {
     }
 
     public static void mainSync(String[] args) throws Exception{
-        RpcConsumer consumer = RpcConsumer.getInstance();
+        RpcConsumer consumer = RpcConsumer.getInstance(30000, 60000);
         RpcFuture future = consumer.sendRequest(getRpcRequestProtocol(), getRegistryService("127.0.0.1:2181","zookeeper","random"));
         LOGGER.info("从服务消费者获取到的数据===>>>" + future.get());
         consumer.close();

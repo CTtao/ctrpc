@@ -47,7 +47,19 @@ public class RpcConsumer implements Consumer {
 
     private ScheduledExecutorService executorService;
 
-    private RpcConsumer(){
+    //心跳间隔时间，默认30s
+    private int heartbeatInterval = 30000;
+
+    //扫描并移除连接时间，默认60s
+    private int scanNotActiveChannelInterval = 60000;
+
+    private RpcConsumer(int heartbeatInterval, int scanNotActiveChannelInterval){
+        if (heartbeatInterval > 0){
+            this.heartbeatInterval = heartbeatInterval;
+        }
+        if (scanNotActiveChannelInterval > 0){
+            this.scanNotActiveChannelInterval = scanNotActiveChannelInterval;
+        }
         localIP = IPUtils.getLocalHostIP();
         bootstrap = new Bootstrap();
         eventLoopGroup = new NioEventLoopGroup(4);
@@ -63,19 +75,19 @@ public class RpcConsumer implements Consumer {
         executorService.scheduleAtFixedRate(() -> {
             logger.info("=============scanNotActiveChannel============");
             ConsumerConnectionManager.scanNotActiveChannel();
-        }, 10, 60, TimeUnit.SECONDS);
+        }, 10000, scanNotActiveChannelInterval, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
             logger.info("=============broadcastPingMessageFromConsumer============");
             ConsumerConnectionManager.broadcastPingMessageFromConsumer();
-        }, 3, 30, TimeUnit.SECONDS);
+        }, 30000, heartbeatInterval, TimeUnit.MILLISECONDS);
     }
 
-    public static RpcConsumer getInstance(){
+    public static RpcConsumer getInstance(int heartbeatInterval, int scanNotActiveChannelInterval){
         if (instance == null){
             synchronized (RpcConsumer.class){
                 if (instance == null){
-                    instance = new RpcConsumer();
+                    instance = new RpcConsumer(heartbeatInterval, scanNotActiveChannelInterval);
                 }
             }
         }
