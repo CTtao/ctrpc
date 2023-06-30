@@ -3,6 +3,7 @@ package com.ct.rpc.provider.common.server.base;
 import com.ct.rpc.codec.RpcDecoder;
 import com.ct.rpc.codec.RpcEncoder;
 import com.ct.rpc.provider.common.handler.RpcProviderHandler;
+import com.ct.rpc.provider.common.manager.ProviderConnectionManager;
 import com.ct.rpc.provider.common.server.api.Server;
 import com.ct.rpc.registry.api.RegistryService;
 import com.ct.rpc.registry.api.config.RegistryConfig;
@@ -23,6 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author CT
@@ -43,6 +47,9 @@ public class BaseServer implements Server {
     private String reflectType;
 
     protected RegistryService registryService;
+
+    //心跳定时任务线程池
+    private ScheduledExecutorService executorService;
 
     public BaseServer(String serverAddress, String registryAddress, String registryType, String registryLoadBalanceType, String reflectType){
         if (!StringUtils.isEmpty(serverAddress)){
@@ -67,6 +74,7 @@ public class BaseServer implements Server {
 
     @Override
     public void startNettyServer() {
+        this.startHeartbeat();
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
         try {
@@ -93,5 +101,19 @@ public class BaseServer implements Server {
             workGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
+    }
+
+    private void startHeartbeat() {
+        executorService = Executors.newScheduledThreadPool(2);
+        //扫描并处理所有不活跃的连接
+        executorService.scheduleAtFixedRate(() -> {
+            logger.info("=============scanNotActiveChannel============");
+            ProviderConnectionManager.scanNotActiveChannel();
+        }, 10, 6000, TimeUnit.MILLISECONDS);
+
+        executorService.scheduleAtFixedRate(() -> {
+            logger.info("=============broadcastPingMessageFromProvoder============");
+            ProviderConnectionManager.broadcastPingMessageFromProvider();
+        }, 3, 3000, TimeUnit.MILLISECONDS);
     }
 }

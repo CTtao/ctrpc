@@ -75,12 +75,12 @@ public class RpcConsumer implements Consumer {
         executorService.scheduleAtFixedRate(() -> {
             logger.info("=============scanNotActiveChannel============");
             ConsumerConnectionManager.scanNotActiveChannel();
-        }, 10000, scanNotActiveChannelInterval, TimeUnit.MILLISECONDS);
+        }, 10, scanNotActiveChannelInterval, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
             logger.info("=============broadcastPingMessageFromConsumer============");
             ConsumerConnectionManager.broadcastPingMessageFromConsumer();
-        }, 30000, heartbeatInterval, TimeUnit.MILLISECONDS);
+        }, 3, heartbeatInterval, TimeUnit.MILLISECONDS);
     }
 
     public static RpcConsumer getInstance(int heartbeatInterval, int scanNotActiveChannelInterval){

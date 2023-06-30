@@ -1,8 +1,10 @@
 package com.ct.rpc.consumer.common.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ct.rpc.constants.RpcConstants;
 import com.ct.rpc.consumer.common.cache.ConsumerChannelCache;
 import com.ct.rpc.consumer.common.context.RpcContext;
+import com.ct.rpc.protocol.enumeration.RpcStatus;
 import com.ct.rpc.protocol.enumeration.RpcType;
 import com.ct.rpc.proxy.api.future.RpcFuture;
 import com.ct.rpc.protocol.RpcProtocol;
@@ -77,7 +79,6 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         if (protocol == null){
             return;
         }
-        logger.info("服务消费者接收到的数据===>>>{}", JSONObject.toJSONString(protocol));
         this.handlerMessage(protocol, channelHandlerContext.channel());
     }
 
@@ -85,13 +86,34 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         RpcHeader header = protocol.getHeader();
         //心跳消息
         if (header.getMsgType() == (byte) RpcType.HEARTBEAT_TO_CONSUMER.getType()){
-            this.handlerHeartbeatMessage(protocol, channel);
-        } else if (header.getMsgType() == (byte) RpcType.RESPONSE.getType()){
+            this.handlerHeartbeatMessageToConsumer(protocol, channel);
+        } else if (header.getMsgType() == (byte) RpcType.HEARTBEAT_FROM_PROVIDER.getType()){
+            this.handlerHeartbeatMessageFromProvider(protocol, channel);
+        }else if (header.getMsgType() == (byte) RpcType.RESPONSE.getType()){
             this.handlerResponseMessage(protocol, header);
         }
     }
 
-    private void handlerHeartbeatMessage(RpcProtocol<RpcResponse> protocol, Channel channel){
+    /**
+     * 处理从服务提供者发送过来的心跳消息
+     */
+    private void handlerHeartbeatMessageFromProvider(RpcProtocol<RpcResponse> protocol, Channel channel) {
+        RpcHeader header = protocol.getHeader();
+        header.setMsgType((byte) RpcType.HEARTBEAT_TO_PROVIDER.getType());
+        RpcProtocol<RpcRequest> requestRpcProtocol = new RpcProtocol<>();
+        RpcRequest request = new RpcRequest();
+        request.setParameters(new Object[]{RpcConstants.HEARTBEAT_PONG});
+        header.setStatus((byte) RpcStatus.SUCCESS.getCode());
+        requestRpcProtocol.setHeader(header);
+        requestRpcProtocol.setBody(request);
+        channel.writeAndFlush(requestRpcProtocol);
+    }
+
+
+    /**
+     * 处理心跳信息
+     */
+    private void handlerHeartbeatMessageToConsumer(RpcProtocol<RpcResponse> protocol, Channel channel){
         //简单打印
         logger.info("receive service provider heartbeat message, the provider is: {}, the heartbeat message is: {}", channel.remoteAddress(), protocol.getBody().getResult());
     }
