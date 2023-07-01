@@ -17,7 +17,9 @@ public class ProviderNativeDemo {
                 "zookeeper",
                 "random",
                 "com.ct.rpc.demo",
-                "asm");
+                "asm",
+                3000,
+                6000);
         singleServer.startNettyServer();
     }
 }

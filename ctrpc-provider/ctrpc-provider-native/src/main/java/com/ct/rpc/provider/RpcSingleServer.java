@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 public class RpcSingleServer extends BaseServer {
     private final Logger logger = LoggerFactory.getLogger(RpcSingleServer.class);
 
-    public RpcSingleServer(String serverAddress, String registerAddress, String registerType, String registryLoadBalanceType,String scanPackage, String reflectType) {
-        super(serverAddress, registerAddress, registerType, registryLoadBalanceType, reflectType);
+    public RpcSingleServer(String serverAddress, String registerAddress, String registerType, String registryLoadBalanceType,String scanPackage, String reflectType, int heartbeatInterval, int scanNotActiveChannelInterval) {
+        super(serverAddress, registerAddress, registerType, registryLoadBalanceType, reflectType, heartbeatInterval, scanNotActiveChannelInterval);
         try {
             this.handlerMap = RpcServiceScanner.doScannerWithRpcServiceAnnotationFilterAndRegistryService(this.host, this.port, scanPackage, registryService);
         } catch (Exception e){

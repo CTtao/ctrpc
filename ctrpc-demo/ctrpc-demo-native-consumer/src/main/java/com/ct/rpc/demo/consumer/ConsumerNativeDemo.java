@@ -31,8 +31,8 @@ public class ConsumerNativeDemo {
                 3000,
                 false,
                 false,
-                30000,
-                60000);
+                3000,
+                6000);
     }
 
     @Test

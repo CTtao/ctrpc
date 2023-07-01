@@ -51,11 +51,22 @@ public class BaseServer implements Server {
     //心跳定时任务线程池
     private ScheduledExecutorService executorService;
 
-    public BaseServer(String serverAddress, String registryAddress, String registryType, String registryLoadBalanceType, String reflectType){
+    //心跳间隔时间，默认30s
+    private int heartbeatInterval = 30000;
+
+    private int scanNotActiveChannelInterval = 60000;
+
+    public BaseServer(String serverAddress, String registryAddress, String registryType, String registryLoadBalanceType, String reflectType, int heartbeatInterval, int scanNotActiveChannelInterval){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
             this.port = Integer.parseInt(serverArray[1]);
+        }
+        if (heartbeatInterval > 0){
+            this.heartbeatInterval = heartbeatInterval;
+        }
+        if (scanNotActiveChannelInterval > 0){
+            this.scanNotActiveChannelInterval = scanNotActiveChannelInterval;
         }
         this.reflectType = reflectType;
         this.registryService = this.getRegistryService(registryAddress, registryType, registryLoadBalanceType);
@@ -109,11 +120,11 @@ public class BaseServer implements Server {
         executorService.scheduleAtFixedRate(() -> {
             logger.info("=============scanNotActiveChannel============");
             ProviderConnectionManager.scanNotActiveChannel();
-        }, 10, 6000, TimeUnit.MILLISECONDS);
+        }, 10, scanNotActiveChannelInterval, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
             logger.info("=============broadcastPingMessageFromProvoder============");
             ProviderConnectionManager.broadcastPingMessageFromProvider();
-        }, 3, 3000, TimeUnit.MILLISECONDS);
+        }, 3, heartbeatInterval, TimeUnit.MILLISECONDS);
     }
 }
