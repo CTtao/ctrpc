@@ -13,7 +13,9 @@ import com.ct.rpc.protocol.response.RpcResponse;
 import com.ct.rpc.provider.common.cache.ProviderChannelCache;
 import com.ct.rpc.reflect.api.ReflectInvoker;
 import com.ct.rpc.spi.loader.ExtensionLoader;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
+import io.netty.handler.timeout.IdleStateEvent;
 import net.sf.cglib.reflect.FastClass;
 import net.sf.cglib.reflect.FastMethod;
 import org.slf4j.Logger;
@@ -176,5 +178,20 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
         logger.error("server caught exception",cause);
         ProviderChannelCache.remove(ctx.channel());
         ctx.close();
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        //如果是IdleStateEvent事件
+        if (evt instanceof IdleStateEvent){
+            Channel channel = ctx.channel();
+            try {
+                logger.info("IdleStateEvent triggered, close channel " + channel.remoteAddress());
+                channel.close();
+            }finally {
+                channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+            }
+        }
+        super.userEventTriggered(ctx, evt);
     }
 }

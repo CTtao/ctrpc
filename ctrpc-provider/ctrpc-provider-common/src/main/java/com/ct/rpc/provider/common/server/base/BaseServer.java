@@ -2,6 +2,7 @@ package com.ct.rpc.provider.common.server.base;
 
 import com.ct.rpc.codec.RpcDecoder;
 import com.ct.rpc.codec.RpcEncoder;
+import com.ct.rpc.constants.RpcConstants;
 import com.ct.rpc.provider.common.handler.RpcProviderHandler;
 import com.ct.rpc.provider.common.manager.ProviderConnectionManager;
 import com.ct.rpc.provider.common.server.api.Server;
@@ -18,6 +19,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,9 +98,10 @@ public class BaseServer implements Server {
                         protected void initChannel(SocketChannel channel) throws Exception {
                             channel.pipeline()
                                     //todo 预留编解码，需要实现自定义协议
-                                    .addLast(new RpcDecoder())
-                                    .addLast(new RpcEncoder())
-                                    .addLast(new RpcProviderHandler(reflectType, handlerMap));
+                                    .addLast(RpcConstants.CODEC_DECODER, new RpcDecoder())
+                                    .addLast(RpcConstants.CODEC_ENCODER, new RpcEncoder())
+                                    .addLast(RpcConstants.CODEC_SERVER_IDLE_HANDLER, new IdleStateHandler(0, 0, heartbeatInterval, TimeUnit.MILLISECONDS))
+                                    .addLast(RpcConstants.CODEC_HANDLER, new RpcProviderHandler(reflectType, handlerMap));
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
