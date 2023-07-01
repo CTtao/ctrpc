@@ -6,6 +6,7 @@ import com.ct.rpc.consumer.common.cache.ConsumerChannelCache;
 import com.ct.rpc.consumer.common.context.RpcContext;
 import com.ct.rpc.protocol.enumeration.RpcStatus;
 import com.ct.rpc.protocol.enumeration.RpcType;
+import com.ct.rpc.protocol.header.RpcHeaderFactory;
 import com.ct.rpc.proxy.api.future.RpcFuture;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.header.RpcHeader;
@@ -16,6 +17,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +57,21 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
         this.channel = ctx.channel();
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent){
+            RpcHeader header = RpcHeaderFactory.getRequestHeader(RpcConstants.SERIALIZATION_PROTOSTUFF, RpcType.HEARTBEAT_FROM_CONSUMER.getType());
+            RpcProtocol<RpcRequest> requestRpcProtocol = new RpcProtocol<>();
+            RpcRequest rpcRequest = new RpcRequest();
+            rpcRequest.setParameters(new Object[]{RpcConstants.HEARTBEAT_PING});
+            requestRpcProtocol.setHeader(header);
+            requestRpcProtocol.setBody(rpcRequest);
+            ctx.writeAndFlush(requestRpcProtocol);
+        }else {
+            super.userEventTriggered(ctx, evt);
+        }
     }
 
     @Override
