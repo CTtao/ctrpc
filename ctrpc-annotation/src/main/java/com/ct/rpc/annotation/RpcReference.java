@@ -66,4 +66,24 @@ public @interface RpcReference {
      * 服务分组，默认为空
      */
     String group() default "";
+
+    /**
+     * 心跳间隔，默认30s
+     */
+    int heartbeatInterval() default 30000;
+
+    /**
+     * 扫面空间连接间隔，默认60s
+     */
+    int scanNotActiveChannelInterval() default 60000;
+
+    /**
+     * 重试间隔时间
+     */
+    int retryInterval() default 1000;
+
+    /**
+     * 重试次数
+     */
+    int retryTimes() default 3;
 }
