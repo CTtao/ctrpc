@@ -19,6 +19,7 @@
         <module>ctrpc-demo-spring-annotation-provider</module>
         <module>ctrpc-demo-spring-xml-consumer</module>
         <module>ctrpc-demo-spring-annotation-consumer</module>
+        <module>ctrpc-demo-spring-boot-provider</module>
     </modules>
 
     <properties>

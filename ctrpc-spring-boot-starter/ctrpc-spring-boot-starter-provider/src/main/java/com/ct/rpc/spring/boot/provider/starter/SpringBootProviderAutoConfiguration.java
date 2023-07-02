@@ -3,6 +3,7 @@ package com.ct.rpc.spring.boot.provider.starter;
 import com.ct.rpc.provider.spring.RpcSpringServer;
 import com.ct.rpc.spring.boot.provider.config.SpringBootProviderConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @description
  */
 @Configuration
+@EnableConfigurationProperties
 public class SpringBootProviderAutoConfiguration {
     @Bean
     @ConfigurationProperties(prefix = "ctrpc.ct.provider")
