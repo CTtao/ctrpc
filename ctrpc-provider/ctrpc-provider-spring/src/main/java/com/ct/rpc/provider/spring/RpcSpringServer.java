@@ -25,8 +25,9 @@ public class RpcSpringServer extends BaseServer implements ApplicationContextAwa
     private final Logger logger = LoggerFactory.getLogger(RpcSpringServer.class);
 
     public RpcSpringServer(String serverAddress, String registryAddress, String registryType, String registryLoadBalanceType, String reflectType,
-                           int heartbeatInterval, int scanNotActiveChannelInterval){
-        super(serverAddress, registryAddress, registryType, registryLoadBalanceType, reflectType, heartbeatInterval, scanNotActiveChannelInterval);
+                           int heartbeatInterval, int scanNotActiveChannelInterval,
+                           boolean enableResultCache, int resultCacheExpire){
+        super(serverAddress, registryAddress, registryType, registryLoadBalanceType, reflectType, heartbeatInterval, scanNotActiveChannelInterval, enableResultCache, resultCacheExpire);
     }
 
     @Override

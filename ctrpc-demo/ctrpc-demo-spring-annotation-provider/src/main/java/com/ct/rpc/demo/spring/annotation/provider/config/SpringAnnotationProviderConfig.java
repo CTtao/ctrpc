@@ -37,9 +37,21 @@ public class SpringAnnotationProviderConfig {
     @Value("${server.scanNotActiveChannelInterval}")
     private int scanNotActiveChannelInterval;
 
+    /**
+     * 是否开启结果缓存
+     */
+    @Value("${server.enableResultCache}")
+    private boolean enableResultCache;
+
+    /**
+     * 结果缓存的时长
+     */
+    @Value("${server.resultCacheExpire}")
+    private int resultCacheExpire;
+
     @Bean
     public RpcSpringServer rpcSpringServer(){
-        return new RpcSpringServer(serverAddress, registryAddress, registryType, registryLoadBalanceType, reflectType, heartbeatInterval, scanNotActiveChannelInterval);
+        return new RpcSpringServer(serverAddress, registryAddress, registryType, registryLoadBalanceType, reflectType, heartbeatInterval, scanNotActiveChannelInterval, enableResultCache, resultCacheExpire);
     }
 
 }

@@ -56,6 +56,12 @@
 
         <dependency>
             <groupId>com.ct</groupId>
+            <artifactId>ctrpc-cache</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ct</groupId>
             <artifactId>ctrpc-spi</artifactId>
             <version>${project.version}</version>
         </dependency>

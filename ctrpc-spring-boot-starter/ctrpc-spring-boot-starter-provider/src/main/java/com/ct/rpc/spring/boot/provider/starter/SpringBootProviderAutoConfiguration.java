@@ -29,6 +29,8 @@ public class SpringBootProviderAutoConfiguration {
                 springBootProviderConfig.getRegistryLoadBalanceType(),
                 springBootProviderConfig.getReflectType(),
                 springBootProviderConfig.getHeartbeatInterval(),
-                springBootProviderConfig.getScanNotActiveChannelInterval());
+                springBootProviderConfig.getScanNotActiveChannelInterval(),
+                springBootProviderConfig.isEnableResultCache(),
+                springBootProviderConfig.getResultCacheExpire());
     }
 }

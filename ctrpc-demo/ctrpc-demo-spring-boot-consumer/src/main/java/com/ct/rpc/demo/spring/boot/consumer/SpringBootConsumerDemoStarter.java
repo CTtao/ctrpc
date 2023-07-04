@@ -21,7 +21,9 @@ public class SpringBootConsumerDemoStarter {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(SpringBootConsumerDemoStarter.class, args);
         ConsumerDemoService consumerDemoService = context.getBean(ConsumerDemoService.class);
-        String result = consumerDemoService.hello("ct");
-        LOGGER.info("返回的结果数据===>>> " + result);
+        for (int i = 0; i < 5; i++) {
+            String result = consumerDemoService.hello("ct");
+            LOGGER.info("返回的结果数据===>>> " + result);
+        }
     }
 }

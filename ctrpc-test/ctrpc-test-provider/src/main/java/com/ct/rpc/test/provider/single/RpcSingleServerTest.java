@@ -18,7 +18,8 @@ public class RpcSingleServerTest {
                 "com.ct.rpc.test",
                 "asm",
                 30000,
-                60000);
+                60000,
+                true, 30000);
         singleServer.startNettyServer();
     }
 }

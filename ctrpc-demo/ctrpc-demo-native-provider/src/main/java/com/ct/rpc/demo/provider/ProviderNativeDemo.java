@@ -18,8 +18,8 @@ public class ProviderNativeDemo {
                 "random",
                 "com.ct.rpc.demo",
                 "asm",
-                3000,
-                6000);
+                30000,60000,
+                true, 30000);
         singleServer.startNettyServer();
     }
 }

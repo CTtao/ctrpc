@@ -31,8 +31,8 @@ public class ConsumerNativeDemo {
                 3000,
                 false,
                 false,
-                3000,
-                6000,
+                30000,
+                60000,
                 1000,
                 3);
     }
@@ -40,8 +40,10 @@ public class ConsumerNativeDemo {
     @Test
     public void testInterfaceRpc() throws InterruptedException{
         DemoService demoService = rpcClient.create(DemoService.class);
-        String result = demoService.hello("ct");
-        LOGGER.info("返回的结果数据===>>>" + result);
+        for (int i = 0; i < 5; i++) {
+            String result = demoService.hello("ct");
+            LOGGER.info("返回的结果数据===>>>" + result);
+        }
 //        rpcClient.shutdown();
         while (true){
             Thread.sleep(1000);

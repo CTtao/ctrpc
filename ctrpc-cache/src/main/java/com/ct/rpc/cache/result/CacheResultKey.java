@@ -42,8 +42,7 @@ public class CacheResultKey implements Serializable {
      */
     private String group;
 
-    public CacheResultKey(long cacheTimeStamp, String className, String methodName, Class<?>[] parameterTypes, Object[] parameters, String version, String group) {
-        this.cacheTimeStamp = cacheTimeStamp;
+    public CacheResultKey(String className, String methodName, Class<?>[] parameterTypes, Object[] parameters, String version, String group) {
         this.className = className;
         this.methodName = methodName;
         this.parameterTypes = parameterTypes;
