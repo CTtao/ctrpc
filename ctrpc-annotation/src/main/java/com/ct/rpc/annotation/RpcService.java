@@ -1,5 +1,6 @@
 package com.ct.rpc.annotation;
 
+import com.ct.rpc.constants.RpcConstants;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.ElementType;
@@ -30,12 +31,12 @@ public @interface RpcService {
     /**
      * 版本号
      */
-    String version() default "1.0.0";
+    String version() default RpcConstants.RPC_COMMON_DEFAULT_VERSION;
 
     /**
      * 服务分组，默认为空
      */
-    String group() default "";
+    String group() default RpcConstants.RPC_COMMON_DEFAULT_GROUP;
 
     /**
      * 权重
