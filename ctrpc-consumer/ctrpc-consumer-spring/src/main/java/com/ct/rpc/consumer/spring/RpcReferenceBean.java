@@ -91,6 +91,7 @@ public class RpcReferenceBean implements FactoryBean<Object> {
 
     @SuppressWarnings("unchecked")
     public void init() throws Exception{
+        //todo 读配置优先级：注解填入参数 > yml文件 > 注解默认值
         RpcClient rpcClient = new RpcClient(registryAddress, registryType, loadBalanceType, proxy, version, group, serializationType,
                 timeout, async, oneway,
                 heartbeatInterval, scanNotActiveChannelInterval,

@@ -23,6 +23,7 @@ public class SpringBootConsumerAutoConfiguration {
 
     @Bean
     public RpcClient rpcClient(final SpringBootConsumerConfig springBootConsumerConfig){
+        //todo 读配置优先级：注解填入参数 > yml文件 > 注解默认值
         return new RpcClient(springBootConsumerConfig.getRegistryAddress(),
                 springBootConsumerConfig.getRegistryType(),
                 springBootConsumerConfig.getLoadBalanceType(),
