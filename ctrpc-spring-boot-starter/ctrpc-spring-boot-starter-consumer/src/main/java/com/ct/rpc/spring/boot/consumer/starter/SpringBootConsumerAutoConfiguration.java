@@ -32,11 +32,13 @@ public class SpringBootConsumerAutoConfiguration {
                 springBootConsumerConfig.getGroup(),
                 springBootConsumerConfig.getSerializationType(),
                 springBootConsumerConfig.getTimeout(),
-                springBootConsumerConfig.getAsync(),
-                springBootConsumerConfig.getOneway(),
+                springBootConsumerConfig.isAsync(),
+                springBootConsumerConfig.isOneway(),
                 springBootConsumerConfig.getHeartbeatInterval(),
                 springBootConsumerConfig.getScanNotActiveChannelInterval(),
                 springBootConsumerConfig.getRetryInterval(),
-                springBootConsumerConfig.getRetryTimes());
+                springBootConsumerConfig.getRetryTimes(),
+                springBootConsumerConfig.isEnableResultCache(),
+                springBootConsumerConfig.getResultCacheExpire());
     }
 }

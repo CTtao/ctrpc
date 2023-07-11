@@ -72,11 +72,23 @@ public class RpcClient {
     //重新次数
     private int retryTimes = 3;
 
+    /**
+     * 是否开启结果缓存
+     */
+    private boolean enableResultCache;
+
+    /**
+     * 缓存结果的时长，单位是毫秒
+     */
+    private int resultCacheExpire;
+
+
     public RpcClient(String registryAddress, String registryType ,String registryLoadBalanceType,
                      String proxy, String serviceVersion, String serviceGroup, String serializationType,
                      long timeout, boolean async, boolean oneway,
                      int heartbeatInterval, int scanNotActiveChannelInterval,
-                     int retryInterval, int retryTimes) {
+                     int retryInterval, int retryTimes,
+                     boolean enableResultCache, int resultCacheExpire) {
         this.serviceVersion = serviceVersion;
         this.serviceGroup = serviceGroup;
         this.serializationType = serializationType;
@@ -87,18 +99,26 @@ public class RpcClient {
         this.heartbeatInterval = heartbeatInterval;
         this.scanNotActiveChannelInterval = scanNotActiveChannelInterval;
         this.retryInterval = retryInterval;
+        this.enableResultCache = enableResultCache;
+        this.resultCacheExpire = resultCacheExpire;
         this.retryTimes = retryTimes;
         this.registryService = getRegistryService(registryAddress, registryType, registryLoadBalanceType);
     }
 
     public <T> T create(Class<T> interfaceClass){
         ProxyFactory proxyFactory = ExtensionLoader.getExtension(ProxyFactory.class, proxy);
-        proxyFactory.init(new ProxyConfig(interfaceClass, serviceVersion, serviceGroup, serializationType, timeout,registryService, RpcConsumer.getInstance(heartbeatInterval, scanNotActiveChannelInterval, retryInterval, retryTimes), async, oneway));
+        proxyFactory.init(new ProxyConfig(interfaceClass, serviceVersion, serviceGroup, serializationType, timeout,
+                registryService, RpcConsumer.getInstance(heartbeatInterval, scanNotActiveChannelInterval, retryInterval, retryTimes),
+                async, oneway,
+                enableResultCache, resultCacheExpire));
         return proxyFactory.getProxy(interfaceClass);
     }
 
     public <T> IAsyncObjectProxy createAsync(Class<T> interfaceClass){
-        return new ObjectProxy<T>(interfaceClass, serviceVersion, serviceGroup, serializationType, timeout, registryService, RpcConsumer.getInstance(heartbeatInterval, scanNotActiveChannelInterval, retryInterval, retryTimes), async, oneway);
+        return new ObjectProxy<T>(interfaceClass, serviceVersion, serviceGroup, serializationType, timeout,
+                registryService, RpcConsumer.getInstance(heartbeatInterval, scanNotActiveChannelInterval, retryInterval, retryTimes),
+                async, oneway,
+                enableResultCache, resultCacheExpire);
     }
     public void shutdown(){
         RpcConsumer.getInstance(heartbeatInterval, scanNotActiveChannelInterval, retryInterval, retryTimes).close();
