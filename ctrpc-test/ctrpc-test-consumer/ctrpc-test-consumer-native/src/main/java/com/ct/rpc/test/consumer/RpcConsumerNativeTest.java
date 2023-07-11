@@ -20,7 +20,9 @@ public class RpcConsumerNativeTest {
     public static void main(String[] args) throws Exception{
         RpcClient rpcClient = new RpcClient("127.0.0.1", "zookeeper","random", "jdk","1.0.0", "ct", "jdk", 3000, false, false,
                 30000, 60000,
-                1000, 3);
+                1000, 3,
+                true, 10000,
+                true, "127.0.0.1:27880");
         IAsyncObjectProxy demoService = rpcClient.createAsync(DemoService.class);
         RpcFuture future = demoService.call("hello","ct");
         LOGGER.info("返回的结果数据为===>>>" + future.get());
@@ -39,12 +41,11 @@ public class RpcConsumerNativeTest {
                 "ct",
                 "protostuff",
                 3000,
-                false,
-                false,
-                30000,
-                60000,
-                1000,
-                3);
+                false, false,
+                30000, 60000,
+                1000, 3,
+                true, 10000,
+                true, "127.0.0.1:27880");
     }
 
     @Test
