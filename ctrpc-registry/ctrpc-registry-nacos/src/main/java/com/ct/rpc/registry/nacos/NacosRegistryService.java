@@ -68,6 +68,11 @@ public class NacosRegistryService extends BaseRegistryService {
     }
 
     @Override
+    public ServiceMeta select(List<ServiceMeta> serviceMetaList, int invokeHashCode, String sourceIp) {
+        return null;
+    }
+
+    @Override
     public void destroy() throws Exception {
         namingService.shutDown();
     }

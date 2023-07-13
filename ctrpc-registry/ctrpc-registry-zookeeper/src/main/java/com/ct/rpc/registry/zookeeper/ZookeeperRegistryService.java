@@ -98,6 +98,11 @@ public class ZookeeperRegistryService implements RegistryService {
         return this.serviceEnhancedLoadBalancer.select(ServiceLoadBalancerHelper.getServiceMetaList((List<ServiceInstance<ServiceMeta>>) serviceInstances), invokerHashCode, sourceIP);
     }
 
+    @Override
+    public ServiceMeta select(List<ServiceMeta> serviceMetaList, int invokeHashCode, String sourceIp) {
+        return this.serviceEnhancedLoadBalancer.select(serviceMetaList, invokeHashCode, sourceIp);
+    }
+
     private ServiceMeta getServiceMetaInstance(int invokeHashCode, String sourceIP, List<ServiceInstance<ServiceMeta>> serviceInstances){
         ServiceInstance<ServiceMeta> instance = this.serviceLoadBalancer.select(serviceInstances, invokeHashCode, sourceIP);
         if (instance != null){

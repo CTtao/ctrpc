@@ -5,6 +5,7 @@ import com.ct.rpc.registry.api.config.RegistryConfig;
 import com.ct.rpc.spi.annotation.SPI;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author CT
@@ -35,6 +36,13 @@ public interface RegistryService {
      * @throws Exception 抛出异常
      */
     ServiceMeta discovery(String serviceName, int invokerHashCode, String sourceIP) throws Exception;
+
+    /**
+     * 从多个元数据列表中根据一定的规则获取一个元数据
+     * @param serviceMetaList 元数据列表
+     * @return 某个特定的元数据
+     */
+    ServiceMeta select(List<ServiceMeta> serviceMetaList, int invokeHashCode, String sourceIp);
 
     /**
      * 服务销毁
