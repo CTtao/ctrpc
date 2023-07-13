@@ -1,6 +1,7 @@
 package com.ct.rpc.protocol.meta;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author CT
@@ -99,5 +100,23 @@ public class ServiceMeta implements Serializable {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(serviceName, serviceVersion, serviceAddr, servicePort, serviceGroup, weight);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServiceMeta serviceMeta = (ServiceMeta) o;
+        return Objects.equals(serviceName, serviceMeta.serviceName)
+                && Objects.equals(serviceVersion, serviceMeta.serviceVersion)
+                && Objects.equals(serviceAddr, serviceMeta.serviceAddr)
+                && servicePort == serviceMeta.servicePort
+                && Objects.equals(serviceGroup, serviceMeta.serviceGroup)
+                && weight == serviceMeta.weight;
     }
 }
