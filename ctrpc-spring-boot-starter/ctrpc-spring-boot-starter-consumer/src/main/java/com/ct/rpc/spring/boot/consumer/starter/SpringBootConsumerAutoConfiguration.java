@@ -41,6 +41,7 @@ public class SpringBootConsumerAutoConfiguration {
                 springBootConsumerConfig.isEnableResultCache(),
                 springBootConsumerConfig.getResultCacheExpire(),
                 springBootConsumerConfig.isEnableDirectServer(),
-                springBootConsumerConfig.getDirectServerUrl());
+                springBootConsumerConfig.getDirectServerUrl(),
+                springBootConsumerConfig.isEnableDelayConnection());
     }
 }

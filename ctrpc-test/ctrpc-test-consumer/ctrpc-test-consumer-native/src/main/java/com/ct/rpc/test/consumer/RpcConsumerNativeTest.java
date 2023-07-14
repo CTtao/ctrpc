@@ -22,7 +22,8 @@ public class RpcConsumerNativeTest {
                 30000, 60000,
                 1000, 3,
                 true, 10000,
-                true, "127.0.0.1:27880");
+                true, "127.0.0.1:27880",
+                true);
         IAsyncObjectProxy demoService = rpcClient.createAsync(DemoService.class);
         RpcFuture future = demoService.call("hello","ct");
         LOGGER.info("返回的结果数据为===>>>" + future.get());
@@ -45,7 +46,8 @@ public class RpcConsumerNativeTest {
                 30000, 60000,
                 1000, 3,
                 true, 10000,
-                true, "127.0.0.1:27880");
+                true, "127.0.0.1:27880",
+                true);
     }
 
     @Test

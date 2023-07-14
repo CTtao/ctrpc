@@ -40,4 +40,6 @@ ctrpc:
       enableDirectServer: true
       # directServerUrl
       directServerUrl: 127.0.0.1:27880
+      # enableDelayConnection
+      enableDelayConnection: true
 

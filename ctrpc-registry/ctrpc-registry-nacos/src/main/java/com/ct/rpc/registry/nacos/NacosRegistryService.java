@@ -73,6 +73,11 @@ public class NacosRegistryService extends BaseRegistryService {
     }
 
     @Override
+    public List<ServiceMeta> discoveryAll() throws Exception {
+        return null;
+    }
+
+    @Override
     public void destroy() throws Exception {
         namingService.shutDown();
     }

@@ -99,6 +99,11 @@ public class RpcReferenceBean implements FactoryBean<Object> {
      */
     private String directServerUrl;
 
+    /**
+     * 是否开启延迟连接
+     */
+    private boolean enableDelayConnection;
+
     @Override
     public Object getObject() throws Exception{
         return object;
@@ -117,7 +122,8 @@ public class RpcReferenceBean implements FactoryBean<Object> {
                 heartbeatInterval, scanNotActiveChannelInterval,
                 retryInterval, retryTimes,
                 enableResultCache, resultCacheExpire,
-                enableDirectServer, directServerUrl);
+                enableDirectServer, directServerUrl,
+                enableDelayConnection);
         this.object = rpcClient.create(interfaceClass);
     }
 
@@ -268,5 +274,13 @@ public class RpcReferenceBean implements FactoryBean<Object> {
 
     public void setDirectServerUrl(String directServerUrl) {
         this.directServerUrl = directServerUrl;
+    }
+
+    public boolean isEnableDelayConnection() {
+        return enableDelayConnection;
+    }
+
+    public void setEnableDelayConnection(boolean enableDelayConnection) {
+        this.enableDelayConnection = enableDelayConnection;
     }
 }
