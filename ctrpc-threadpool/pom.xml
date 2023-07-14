@@ -9,17 +9,18 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ctrpc-common</artifactId>
+    <artifactId>ctrpc-threadpool</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.ct</groupId>
-            <artifactId>ctrpc-annotation</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ct</groupId>
-            <artifactId>ctrpc-threadpool</artifactId>
+            <artifactId>ctrpc-constants</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

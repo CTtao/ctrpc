@@ -26,6 +26,7 @@
         <module>ctrpc-demo</module>
         <module>ctrpc-spring-boot-starter</module>
         <module>ctrpc-cache</module>
+        <module>ctrpc-threadpool</module>
     </modules>
 
     <properties>
