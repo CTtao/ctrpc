@@ -16,8 +16,8 @@ ctrpc:
       version: 1.0.0
       # group
       group: ct
-      # zkconsistenthash
-      serializationType: zkconsistenthash
+      # protostuff
+      serializationType: protostuff
       # timeout
       timeout: 30000
       # async
