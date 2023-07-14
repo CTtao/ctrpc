@@ -47,12 +47,24 @@ public final class SpringBootProviderConfig {
      */
     private int resultCacheExpire;
 
+    /**
+     * 核心线程数
+     */
+    private int corePoolSize;
+
+    /**
+     * 最大线程数
+     */
+    private int maxPoolSize;
+
+
     public SpringBootProviderConfig() {
     }
 
     public SpringBootProviderConfig(final String serverAddress, final String registryAddress, final String registryType, final String registryLoadBalanceType, final String reflectType,
                                     final int heartbeatInterval, final int scanNotActiveChannelInterval,
-                                    final boolean enableResultCache, final int resultCacheExpire) {
+                                    final boolean enableResultCache, final int resultCacheExpire,
+                                    final int corePoolSize, final int maxPoolSize) {
         this.serverAddress = serverAddress;
         this.registryAddress = registryAddress;
         this.registryType = registryType;
@@ -64,6 +76,8 @@ public final class SpringBootProviderConfig {
         this.scanNotActiveChannelInterval = scanNotActiveChannelInterval;
         this.enableResultCache = enableResultCache;
         this.resultCacheExpire = resultCacheExpire;
+        this.corePoolSize = corePoolSize;
+        this.maxPoolSize = maxPoolSize;
     }
 
     public String getServerAddress() {
@@ -136,5 +150,21 @@ public final class SpringBootProviderConfig {
 
     public void setResultCacheExpire(int resultCacheExpire) {
         this.resultCacheExpire = resultCacheExpire;
+    }
+
+    public int getCorePoolSize() {
+        return corePoolSize;
+    }
+
+    public void setCorePoolSize(int corePoolSize) {
+        this.corePoolSize = corePoolSize;
+    }
+
+    public int getMaxPoolSize() {
+        return maxPoolSize;
+    }
+
+    public void setMaxPoolSize(int maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
     }
 }

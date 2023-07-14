@@ -63,6 +63,10 @@ public class BaseServer implements Server {
     //是否开启结果缓存
     private boolean enableResultCache;
 
+    //核心线程数
+    private int corePoolSize;
+    //最大线程数
+    private int maxPoolSize;
 
     public BaseServer(String serverAddress,
                       String registryAddress,
@@ -70,7 +74,8 @@ public class BaseServer implements Server {
                       String registryLoadBalanceType,
                       String reflectType,
                       int heartbeatInterval, int scanNotActiveChannelInterval,
-                      boolean enableResultCache, int resultCacheExpire){
+                      boolean enableResultCache, int resultCacheExpire,
+                      int corePoolSize, int maxPoolSize){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
@@ -88,6 +93,8 @@ public class BaseServer implements Server {
             this.resultCacheExpire = resultCacheExpire;
         }
         this.enableResultCache = enableResultCache;
+        this.corePoolSize = corePoolSize;
+        this.maxPoolSize = maxPoolSize;
     }
 
     private RegistryService getRegistryService(String registryAddress, String registryType, String registryLoadBalanceType){
@@ -117,7 +124,10 @@ public class BaseServer implements Server {
                                     .addLast(RpcConstants.CODEC_DECODER, new RpcDecoder())
                                     .addLast(RpcConstants.CODEC_ENCODER, new RpcEncoder())
                                     .addLast(RpcConstants.CODEC_SERVER_IDLE_HANDLER, new IdleStateHandler(0, 0, heartbeatInterval, TimeUnit.MILLISECONDS))
-                                    .addLast(RpcConstants.CODEC_HANDLER, new RpcProviderHandler(reflectType, enableResultCache, resultCacheExpire, handlerMap));
+                                    .addLast(RpcConstants.CODEC_HANDLER, new RpcProviderHandler(reflectType,
+                                            enableResultCache, resultCacheExpire,
+                                            corePoolSize, maxPoolSize,
+                                            handlerMap));
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)

@@ -1,10 +1,8 @@
 package com.ct.rpc.provider.common.handler;
 
-import com.alibaba.fastjson.JSONObject;
 import com.ct.rpc.cache.result.CacheResultKey;
 import com.ct.rpc.cache.result.CacheResultManager;
 import com.ct.rpc.common.helper.RpcServiceHelper;
-import com.ct.rpc.common.threadpool.ServerThreadPool;
 import com.ct.rpc.constants.RpcConstants;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.enumeration.RpcStatus;
@@ -15,15 +13,13 @@ import com.ct.rpc.protocol.response.RpcResponse;
 import com.ct.rpc.provider.common.cache.ProviderChannelCache;
 import com.ct.rpc.reflect.api.ReflectInvoker;
 import com.ct.rpc.spi.loader.ExtensionLoader;
+import com.ct.rpc.threadpool.ConcurrentThreadPool;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.timeout.IdleStateEvent;
-import net.sf.cglib.reflect.FastClass;
-import net.sf.cglib.reflect.FastMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -55,7 +51,15 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
      */
     private final CacheResultManager<RpcProtocol<RpcResponse>> cacheResultManager;
 
-    public RpcProviderHandler(String reflectType, boolean enableResultCache, int resultCacheExpire, Map<String, Object> handlerMap){
+    /**
+     * 线程池
+     */
+    private final ConcurrentThreadPool concurrentThreadPool;
+
+    public RpcProviderHandler(String reflectType,
+                              boolean enableResultCache, int resultCacheExpire,
+                              int corePoolSize, int maxPoolSize,
+                              Map<String, Object> handlerMap){
 //        this.reflectType = reflectType;
         this.handlerMap = handlerMap;
         this.reflectInvoker = ExtensionLoader.getExtension(ReflectInvoker.class, reflectType);
@@ -64,6 +68,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
             resultCacheExpire = RpcConstants.RPC_SCAN_RESULT_CACHE_EXPIRE;
         }
         this.cacheResultManager = CacheResultManager.getInstance(resultCacheExpire, enableResultCache);
+        this.concurrentThreadPool = ConcurrentThreadPool.getInstance(corePoolSize, maxPoolSize);
     }
 
     @Override
@@ -85,7 +90,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcProtocol<RpcRequest> protocol) throws Exception {
-        ServerThreadPool.submit(() -> {
+        concurrentThreadPool.submit(() -> {
             RpcProtocol<RpcResponse> responseRpcProtocol = handlerMessage(protocol, ctx.channel());
             ctx.writeAndFlush(responseRpcProtocol).addListener(new ChannelFutureListener() {
                 @Override
