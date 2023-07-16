@@ -92,6 +92,8 @@ public class RpcConsumerPostProcessor implements ApplicationContextAware, BeanCl
             builder.addPropertyValue("enableDirectServer", annotation.enableDirectServer());
             builder.addPropertyValue("directServerUrl", annotation.directServerUrl());
             builder.addPropertyValue("enableDelayConnection", annotation.enableDelayConnection());
+            builder.addPropertyValue("corePoolSize", annotation.corePoolSize());
+            builder.addPropertyValue("maxPoolSize", annotation.maxPoolSize());
 
             BeanDefinition beanDefinition = builder.getBeanDefinition();
             rpcReferenceDefinitions.put(field.getName(), beanDefinition);

@@ -11,6 +11,7 @@ import com.ct.rpc.registry.api.RegistryService;
 import com.ct.rpc.registry.api.config.RegistryConfig;
 import com.ct.rpc.registry.zookeeper.ZookeeperRegistryService;
 import com.ct.rpc.spi.loader.ExtensionLoader;
+import com.ct.rpc.threadpool.ConcurrentThreadPool;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +98,11 @@ public class RpcClient {
      */
     private boolean enableDelayConnection;
 
+    /**
+     * 并发线程池
+     */
+    private ConcurrentThreadPool concurrentThreadPool;
+
     public RpcClient(String registryAddress, String registryType ,String registryLoadBalanceType,
                      String proxy, String serviceVersion, String serviceGroup, String serializationType,
                      long timeout, boolean async, boolean oneway,
@@ -104,7 +110,8 @@ public class RpcClient {
                      int retryInterval, int retryTimes,
                      boolean enableResultCache, int resultCacheExpire,
                      boolean enableDirectServer, String directServerUrl,
-                     boolean enableDelayConnection) {
+                     boolean enableDelayConnection,
+                     int coolPoolSize, int maxPoolSize) {
         this.serviceVersion = serviceVersion;
         this.serviceGroup = serviceGroup;
         this.serializationType = serializationType;
@@ -122,6 +129,7 @@ public class RpcClient {
         this.directServerUrl = directServerUrl;
         this.enableDelayConnection = enableDelayConnection;
         this.registryService = getRegistryService(registryAddress, registryType, registryLoadBalanceType);
+        this.concurrentThreadPool = ConcurrentThreadPool.getInstance(coolPoolSize, maxPoolSize);
     }
 
     public <T> T create(Class<T> interfaceClass){
@@ -135,6 +143,8 @@ public class RpcClient {
                         .setEnableDirectServer(enableDirectServer)
                         .setDirectServerUrl(directServerUrl)
                         .setEnableDelayConnection(enableDelayConnection)
+                        .setConcurrentThreadPool(concurrentThreadPool)
+                        .buildNettyGroup()
                         .buildConnection(registryService),
                 async, oneway,
                 enableResultCache, resultCacheExpire));
@@ -151,6 +161,8 @@ public class RpcClient {
                         .setEnableDirectServer(enableDirectServer)
                         .setDirectServerUrl(directServerUrl)
                         .setEnableDelayConnection(enableDelayConnection)
+                        .setConcurrentThreadPool(concurrentThreadPool)
+                        .buildNettyGroup()
                         .buildConnection(registryService),
                 async, oneway,
                 enableResultCache, resultCacheExpire);

@@ -12,6 +12,7 @@ import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.header.RpcHeader;
 import com.ct.rpc.protocol.request.RpcRequest;
 import com.ct.rpc.protocol.response.RpcResponse;
+import com.ct.rpc.threadpool.ConcurrentThreadPool;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -37,6 +38,12 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
 
     //请求ID与RpcResponse协议的映射关系
     private Map<Long, RpcFuture> pendingRPC = new ConcurrentHashMap<>();
+
+    private ConcurrentThreadPool concurrentThreadPool;
+
+    public RpcConsumerHandler(ConcurrentThreadPool concurrentThreadPool){
+        this.concurrentThreadPool = concurrentThreadPool;
+    }
 
     public Channel getChannel() {
         return channel;
@@ -96,7 +103,9 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         if (protocol == null){
             return;
         }
-        this.handlerMessage(protocol, channelHandlerContext.channel());
+        concurrentThreadPool.submit(() -> {
+            this.handlerMessage(protocol, channelHandlerContext.channel());
+        });
     }
 
     private void handlerMessage(RpcProtocol<RpcResponse> protocol, Channel channel){
@@ -145,7 +154,9 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
 
     public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol, boolean async, boolean oneway){
         logger.info("服务消费者发送的数据===>>>{}", JSONObject.toJSONString(protocol));
-        return oneway ? this.sendRequestOneway(protocol) : async ? sendRequestAsync(protocol) : sendRequestSync(protocol);
+        return concurrentThreadPool.submit(() -> {
+            return oneway ? this.sendRequestOneway(protocol) : async ? sendRequestAsync(protocol) : this.sendRequestSync(protocol);
+        });
     }
 
     private RpcFuture sendRequestSync(RpcProtocol<RpcRequest> protocol){
@@ -168,7 +179,7 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
     }
 
     private RpcFuture getRpcFuture(RpcProtocol<RpcRequest> protocol){
-        RpcFuture rpcFuture = new RpcFuture(protocol);
+        RpcFuture rpcFuture = new RpcFuture(protocol, concurrentThreadPool);
         RpcHeader header = protocol.getHeader();
         long requestId = header.getRequestId();
         pendingRPC.put(requestId, rpcFuture);

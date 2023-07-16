@@ -3,20 +3,20 @@ package com.ct.rpc.consumer.common;
 import com.ct.rpc.common.exception.RpcException;
 import com.ct.rpc.common.helper.RpcServiceHelper;
 import com.ct.rpc.common.ip.IPUtils;
-import com.ct.rpc.common.threadpool.ClientThreadPool;
 import com.ct.rpc.common.utils.StringUtils;
 import com.ct.rpc.constants.RpcConstants;
+import com.ct.rpc.consumer.common.handler.RpcConsumerHandler;
 import com.ct.rpc.consumer.common.helper.RpcConsumerHandlerHelper;
+import com.ct.rpc.consumer.common.initializer.RpcConsumerInitializer;
 import com.ct.rpc.consumer.common.manager.ConsumerConnectionManager;
 import com.ct.rpc.loadbalancer.context.ConnectionsContext;
+import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.meta.ServiceMeta;
+import com.ct.rpc.protocol.request.RpcRequest;
 import com.ct.rpc.proxy.api.consumer.Consumer;
 import com.ct.rpc.proxy.api.future.RpcFuture;
-import com.ct.rpc.consumer.common.handler.RpcConsumerHandler;
-import com.ct.rpc.consumer.common.initializer.RpcConsumerInitializer;
-import com.ct.rpc.protocol.RpcProtocol;
-import com.ct.rpc.protocol.request.RpcRequest;
 import com.ct.rpc.registry.api.RegistryService;
+import com.ct.rpc.threadpool.ConcurrentThreadPool;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -83,14 +83,13 @@ public class RpcConsumer implements Consumer {
     //未开启延迟连接时，是否已经初始化连接
     private volatile boolean initConnection = false;
 
+    //并发处理线程池
+    private ConcurrentThreadPool concurrentThreadPool;
+
     private RpcConsumer(){
         localIP = IPUtils.getLocalHostIP();
         bootstrap = new Bootstrap();
         eventLoopGroup = new NioEventLoopGroup(4);
-        bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
-                .handler(new RpcConsumerInitializer(heartbeatInterval));
-        //todo 启动心跳
-        this.startHeartbeat();
     }
 
     public RpcConsumer setEnableDirectServer(boolean enableDirectServer){
@@ -131,6 +130,16 @@ public class RpcConsumer implements Consumer {
         return this;
     }
 
+    public RpcConsumer setConcurrentThreadPool(ConcurrentThreadPool concurrentThreadPool) {
+        this.concurrentThreadPool = concurrentThreadPool;
+        return this;
+    }
+
+    public RpcConsumer buildNettyGroup(){
+        bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
+                .handler(new RpcConsumerInitializer(heartbeatInterval, concurrentThreadPool));
+        return this;
+    }
     /**
      * 初始化连接
      */
@@ -140,6 +149,8 @@ public class RpcConsumer implements Consumer {
             this.initConnection(registryService);
             this.initConnection = true;
         }
+        //TODO 启动心跳，后续优化
+        this.startHeartbeat();
         return this;
     }
 
@@ -171,7 +182,7 @@ public class RpcConsumer implements Consumer {
     public void close(){
         RpcConsumerHandlerHelper.closeRpcClientHandler();
         eventLoopGroup.shutdownGracefully();
-        ClientThreadPool.shutdown();
+        concurrentThreadPool.stop();
         executorService.shutdown();
     }
 
@@ -255,6 +266,9 @@ public class RpcConsumer implements Consumer {
         String[] directServerUrlArray = directServerUrl.split(RpcConstants.RPC_MULTI_DIRECT_SERVERS_SEPARATOR);
         if (directServerUrlArray != null && directServerUrlArray.length > 0){
             for (String directUrl : directServerUrlArray) {
+                if (StringUtils.isEmpty(directUrl)){
+                    continue;
+                }
                 serviceMetaList.add(getDirectServiceMeta(directUrl));
             }
         }

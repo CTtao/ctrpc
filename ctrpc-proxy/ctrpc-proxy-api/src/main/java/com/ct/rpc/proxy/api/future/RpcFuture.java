@@ -1,10 +1,10 @@
 package com.ct.rpc.proxy.api.future;
 
-import com.ct.rpc.common.threadpool.ClientThreadPool;
-import com.ct.rpc.proxy.api.callback.AsyncRpcCallback;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.request.RpcRequest;
 import com.ct.rpc.protocol.response.RpcResponse;
+import com.ct.rpc.proxy.api.callback.AsyncRpcCallback;
+import com.ct.rpc.threadpool.ConcurrentThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +35,13 @@ public class RpcFuture extends CompletableFuture<Object> {
     private List<AsyncRpcCallback> pendingCallbacks = new ArrayList<>();
     private ReentrantLock lock = new ReentrantLock();
 
-    public RpcFuture(RpcProtocol<RpcRequest> requestRpcProtocol){
+    private ConcurrentThreadPool concurrentThreadPool;
+
+    public RpcFuture(RpcProtocol<RpcRequest> requestRpcProtocol, ConcurrentThreadPool concurrentThreadPool){
         this.sync = new Sync();
         this.requestRpcProtocol = requestRpcProtocol;
         this.startTime = System.currentTimeMillis();
+        this.concurrentThreadPool = concurrentThreadPool;
     }
 
     @Override
@@ -100,7 +103,7 @@ public class RpcFuture extends CompletableFuture<Object> {
      */
     private void runCallback(final AsyncRpcCallback callback){
         final RpcResponse response = this.responseRpcProtocol.getBody();
-        ClientThreadPool.submit(() -> {
+        concurrentThreadPool.submit(() -> {
             if (!response.isError()){
                 callback.onSuccess(response.getResult());
             } else {

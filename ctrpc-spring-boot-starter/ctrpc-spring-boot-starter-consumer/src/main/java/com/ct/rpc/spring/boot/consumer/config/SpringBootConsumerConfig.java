@@ -89,6 +89,16 @@ public class SpringBootConsumerConfig {
      */
     private boolean enableDelayConnection;
 
+    /**
+     * 并发线程池核心线程数
+     */
+    private int corePoolSize;
+
+    /**
+     * 并发线程池最大线程数
+     */
+    private int maxPoolSize;
+
     public SpringBootConsumerConfig() {
     }
 
@@ -98,7 +108,8 @@ public class SpringBootConsumerConfig {
                                     final int scanNotActiveChannelInterval, final int retryInterval, final int retryTimes,
                                     final boolean enableResultCache, final int resultCacheExpire,
                                     final boolean enableDirectServer, final String directServerUrl,
-                                    final boolean enableDelayConnection) {
+                                    final boolean enableDelayConnection,
+                                    final int corePoolSize, final int maxPoolSize) {
         this.registryAddress = registryAddress;
         this.registryType = registryType;
         this.loadBalanceType = loadBalanceType;
@@ -120,6 +131,8 @@ public class SpringBootConsumerConfig {
         this.enableDirectServer = enableDirectServer;
         this.directServerUrl = directServerUrl;
         this.enableDelayConnection = enableDelayConnection;
+        this.corePoolSize = corePoolSize;
+        this.maxPoolSize = maxPoolSize;
     }
 
     public String getRegistryAddress() {
@@ -273,5 +286,21 @@ public class SpringBootConsumerConfig {
 
     public void setEnableDelayConnection(boolean enableDelayConnection) {
         this.enableDelayConnection = enableDelayConnection;
+    }
+
+    public int getCorePoolSize() {
+        return corePoolSize;
+    }
+
+    public void setCorePoolSize(int corePoolSize) {
+        this.corePoolSize = corePoolSize;
+    }
+
+    public int getMaxPoolSize() {
+        return maxPoolSize;
+    }
+
+    public void setMaxPoolSize(int maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
     }
 }
