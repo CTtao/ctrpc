@@ -46,4 +46,6 @@ ctrpc:
       corePoolSize: 16
       # maxPoolSize
       maxPoolSize: 16
+      # flowType
+      flowType: print
 

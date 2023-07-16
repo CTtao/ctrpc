@@ -2,6 +2,7 @@ package com.ct.rpc.codec;
 
 import com.ct.rpc.common.utils.SerializationUtils;
 import com.ct.rpc.constants.RpcConstants;
+import com.ct.rpc.flow.processor.FlowPostProcessor;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.enumeration.RpcType;
 import com.ct.rpc.protocol.header.RpcHeader;
@@ -21,6 +22,11 @@ import java.util.List;
  * @description
  */
 public class RpcDecoder extends ByteToMessageDecoder implements RpcCodec {
+    private FlowPostProcessor postProcessor;
+
+    public RpcDecoder(FlowPostProcessor postProcessor){
+        this.postProcessor = postProcessor;
+    }
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         if (in.readableBytes() < RpcConstants.HEADER_TOTAL_LEN){
@@ -88,5 +94,7 @@ public class RpcDecoder extends ByteToMessageDecoder implements RpcCodec {
                 }
                 break;
         }
+        //异步调用流控分析后置处理器
+        this.postFlowProcessor(postProcessor, header);
     }
 }

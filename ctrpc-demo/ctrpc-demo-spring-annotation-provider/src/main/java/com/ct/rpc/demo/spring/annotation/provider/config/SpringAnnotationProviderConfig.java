@@ -55,12 +55,16 @@ public class SpringAnnotationProviderConfig {
     @Value("${server.maxPoolSize}")
     private int maxPoolSize;
 
+    @Value("${server.flowType}")
+    private String flowType;
+
     @Bean
     public RpcSpringServer rpcSpringServer(){
         return new RpcSpringServer(serverAddress, registryAddress, registryType, registryLoadBalanceType, reflectType,
                 heartbeatInterval, scanNotActiveChannelInterval,
                 enableResultCache, resultCacheExpire,
-                corePoolSize, maxPoolSize);
+                corePoolSize, maxPoolSize,
+                flowType);
     }
 
 }

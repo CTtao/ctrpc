@@ -44,6 +44,7 @@ public class SpringBootConsumerAutoConfiguration {
                 springBootConsumerConfig.getDirectServerUrl(),
                 springBootConsumerConfig.isEnableDelayConnection(),
                 springBootConsumerConfig.getCorePoolSize(),
-                springBootConsumerConfig.getMaxPoolSize());
+                springBootConsumerConfig.getMaxPoolSize(),
+                springBootConsumerConfig.getFlowType());
     }
 }

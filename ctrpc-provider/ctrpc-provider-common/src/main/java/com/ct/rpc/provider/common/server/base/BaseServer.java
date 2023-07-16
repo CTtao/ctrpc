@@ -3,6 +3,7 @@ package com.ct.rpc.provider.common.server.base;
 import com.ct.rpc.codec.RpcDecoder;
 import com.ct.rpc.codec.RpcEncoder;
 import com.ct.rpc.constants.RpcConstants;
+import com.ct.rpc.flow.processor.FlowPostProcessor;
 import com.ct.rpc.provider.common.handler.RpcProviderHandler;
 import com.ct.rpc.provider.common.manager.ProviderConnectionManager;
 import com.ct.rpc.provider.common.server.api.Server;
@@ -68,6 +69,9 @@ public class BaseServer implements Server {
     //最大线程数
     private int maxPoolSize;
 
+    //流控分析后置处理器
+    private FlowPostProcessor flowPostProcessor;
+
     public BaseServer(String serverAddress,
                       String registryAddress,
                       String registryType,
@@ -75,7 +79,8 @@ public class BaseServer implements Server {
                       String reflectType,
                       int heartbeatInterval, int scanNotActiveChannelInterval,
                       boolean enableResultCache, int resultCacheExpire,
-                      int corePoolSize, int maxPoolSize){
+                      int corePoolSize, int maxPoolSize,
+                      String flowType){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
@@ -95,6 +100,7 @@ public class BaseServer implements Server {
         this.enableResultCache = enableResultCache;
         this.corePoolSize = corePoolSize;
         this.maxPoolSize = maxPoolSize;
+        this.flowPostProcessor = ExtensionLoader.getExtension(FlowPostProcessor.class, flowType);
     }
 
     private RegistryService getRegistryService(String registryAddress, String registryType, String registryLoadBalanceType){
@@ -121,8 +127,8 @@ public class BaseServer implements Server {
                         protected void initChannel(SocketChannel channel) throws Exception {
                             channel.pipeline()
                                     //todo 预留编解码，需要实现自定义协议
-                                    .addLast(RpcConstants.CODEC_DECODER, new RpcDecoder())
-                                    .addLast(RpcConstants.CODEC_ENCODER, new RpcEncoder())
+                                    .addLast(RpcConstants.CODEC_DECODER, new RpcDecoder(flowPostProcessor))
+                                    .addLast(RpcConstants.CODEC_ENCODER, new RpcEncoder(flowPostProcessor))
                                     .addLast(RpcConstants.CODEC_SERVER_IDLE_HANDLER, new IdleStateHandler(0, 0, heartbeatInterval, TimeUnit.MILLISECONDS))
                                     .addLast(RpcConstants.CODEC_HANDLER, new RpcProviderHandler(reflectType,
                                             enableResultCache, resultCacheExpire,

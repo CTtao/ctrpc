@@ -99,6 +99,11 @@ public class SpringBootConsumerConfig {
      */
     private int maxPoolSize;
 
+    /**
+     * 流控分析类型
+     */
+    private String flowType;
+
     public SpringBootConsumerConfig() {
     }
 
@@ -109,7 +114,8 @@ public class SpringBootConsumerConfig {
                                     final boolean enableResultCache, final int resultCacheExpire,
                                     final boolean enableDirectServer, final String directServerUrl,
                                     final boolean enableDelayConnection,
-                                    final int corePoolSize, final int maxPoolSize) {
+                                    final int corePoolSize, final int maxPoolSize,
+                                    String flowType) {
         this.registryAddress = registryAddress;
         this.registryType = registryType;
         this.loadBalanceType = loadBalanceType;
@@ -133,6 +139,7 @@ public class SpringBootConsumerConfig {
         this.enableDelayConnection = enableDelayConnection;
         this.corePoolSize = corePoolSize;
         this.maxPoolSize = maxPoolSize;
+        this.flowType = flowType;
     }
 
     public String getRegistryAddress() {
@@ -302,5 +309,13 @@ public class SpringBootConsumerConfig {
 
     public void setMaxPoolSize(int maxPoolSize) {
         this.maxPoolSize = maxPoolSize;
+    }
+
+    public String getFlowType() {
+        return flowType;
+    }
+
+    public void setFlowType(String flowType) {
+        this.flowType = flowType;
     }
 }

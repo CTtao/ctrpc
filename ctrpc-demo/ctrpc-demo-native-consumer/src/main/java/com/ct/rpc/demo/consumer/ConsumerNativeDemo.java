@@ -36,7 +36,8 @@ public class ConsumerNativeDemo {
                 false, 10000,
                 true, "127.0.0.1:27880",
                 false,
-                16, 16);
+                16, 16,
+                "print");
     }
 
     @Test

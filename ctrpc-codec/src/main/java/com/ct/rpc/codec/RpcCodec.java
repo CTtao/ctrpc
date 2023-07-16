@@ -1,8 +1,11 @@
 package com.ct.rpc.codec;
 
+import com.ct.rpc.flow.processor.FlowPostProcessor;
+import com.ct.rpc.protocol.header.RpcHeader;
 import com.ct.rpc.serialization.api.Serialization;
 import com.ct.rpc.serialization.jdk.JdkSerialization;
 import com.ct.rpc.spi.loader.ExtensionLoader;
+import com.ct.rpc.threadpool.FlowPostProcessorThreadPool;
 
 /**
  * @author CT
@@ -17,5 +20,17 @@ public interface RpcCodec {
      */
     default Serialization getJdkSerialization(String serializationType){
         return ExtensionLoader.getExtension(Serialization.class, serializationType);
+    }
+
+    /**
+     * 调用RPC框架流量分析后置处理器
+     * @param postProcessor 后置处理器
+     * @param header 封装了流量信息的消息头
+     */
+    default void postFlowProcessor(FlowPostProcessor postProcessor, RpcHeader header){
+        //异步调用流控分析后置处理器
+        FlowPostProcessorThreadPool.submit(() -> {
+            postProcessor.postRpcHeaderProcessor(header);
+        });
     }
 }

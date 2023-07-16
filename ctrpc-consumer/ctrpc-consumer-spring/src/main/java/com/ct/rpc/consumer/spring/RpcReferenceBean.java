@@ -114,6 +114,11 @@ public class RpcReferenceBean implements FactoryBean<Object> {
      */
     private int maxPoolSize;
 
+    /**
+     * 流控分析类型
+     */
+    private String flowType;
+
 
     @Override
     public Object getObject() throws Exception{
@@ -135,7 +140,8 @@ public class RpcReferenceBean implements FactoryBean<Object> {
                 enableResultCache, resultCacheExpire,
                 enableDirectServer, directServerUrl,
                 enableDelayConnection,
-                corePoolSize, maxPoolSize);
+                corePoolSize, maxPoolSize,
+                flowType);
         this.object = rpcClient.create(interfaceClass);
     }
 
@@ -310,5 +316,13 @@ public class RpcReferenceBean implements FactoryBean<Object> {
 
     public void setMaxPoolSize(int maxPoolSize) {
         this.maxPoolSize = maxPoolSize;
+    }
+
+    public String getFlowType() {
+        return flowType;
+    }
+
+    public void setFlowType(String flowType) {
+        this.flowType = flowType;
     }
 }

@@ -1,6 +1,7 @@
 package com.ct.rpc.codec;
 
 import com.ct.rpc.common.utils.SerializationUtils;
+import com.ct.rpc.flow.processor.FlowPostProcessor;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.header.RpcHeader;
 import com.ct.rpc.serialization.api.Serialization;
@@ -16,6 +17,11 @@ import java.nio.charset.StandardCharsets;
  * @description 实现RPC编码
  */
 public class RpcEncoder extends MessageToByteEncoder<RpcProtocol<Object>> implements RpcCodec{
+    private FlowPostProcessor postProcessor;
+
+    public RpcEncoder(FlowPostProcessor postProcessor){
+        this.postProcessor = postProcessor;
+    }
     @Override
     protected void encode(ChannelHandlerContext ctx, RpcProtocol<Object> msg, ByteBuf byteBuf) throws Exception {
         RpcHeader header = msg.getHeader();
@@ -24,11 +30,13 @@ public class RpcEncoder extends MessageToByteEncoder<RpcProtocol<Object>> implem
         byteBuf.writeByte(header.getStatus());
         byteBuf.writeLong(header.getRequestId());
         String serializationType = header.getSerializationType();
-        //SPI扩展
         Serialization serialization = getJdkSerialization(serializationType);
         byteBuf.writeBytes(SerializationUtils.paddingString(serializationType).getBytes(StandardCharsets.UTF_8));
         byte[] data = serialization.serialize(msg.getBody());
         byteBuf.writeInt(data.length);
         byteBuf.writeBytes(data);
+        //异步调用流控分析后置处理器
+        header.setMsgLen(data.length);
+        this.postFlowProcessor(postProcessor, header);
     }
 }

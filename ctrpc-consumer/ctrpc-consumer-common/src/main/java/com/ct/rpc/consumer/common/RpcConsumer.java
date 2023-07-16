@@ -9,6 +9,7 @@ import com.ct.rpc.consumer.common.handler.RpcConsumerHandler;
 import com.ct.rpc.consumer.common.helper.RpcConsumerHandlerHelper;
 import com.ct.rpc.consumer.common.initializer.RpcConsumerInitializer;
 import com.ct.rpc.consumer.common.manager.ConsumerConnectionManager;
+import com.ct.rpc.flow.processor.FlowPostProcessor;
 import com.ct.rpc.loadbalancer.context.ConnectionsContext;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.meta.ServiceMeta;
@@ -16,6 +17,7 @@ import com.ct.rpc.protocol.request.RpcRequest;
 import com.ct.rpc.proxy.api.consumer.Consumer;
 import com.ct.rpc.proxy.api.future.RpcFuture;
 import com.ct.rpc.registry.api.RegistryService;
+import com.ct.rpc.spi.loader.ExtensionLoader;
 import com.ct.rpc.threadpool.ConcurrentThreadPool;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -86,6 +88,9 @@ public class RpcConsumer implements Consumer {
     //并发处理线程池
     private ConcurrentThreadPool concurrentThreadPool;
 
+    //流控分析后置处理器
+    private FlowPostProcessor flowPostProcessor;
+
     private RpcConsumer(){
         localIP = IPUtils.getLocalHostIP();
         bootstrap = new Bootstrap();
@@ -135,9 +140,17 @@ public class RpcConsumer implements Consumer {
         return this;
     }
 
+    public RpcConsumer setFlowPostProcessor(String flowType){
+        if (StringUtils.isEmpty(flowType)){
+            flowType = RpcConstants.FLOW_POST_PROCESSOR_PRINT;
+        }
+        this.flowPostProcessor = ExtensionLoader.getExtension(FlowPostProcessor.class, flowType);
+        return this;
+    }
+
     public RpcConsumer buildNettyGroup(){
         bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
-                .handler(new RpcConsumerInitializer(heartbeatInterval, concurrentThreadPool));
+                .handler(new RpcConsumerInitializer(heartbeatInterval, concurrentThreadPool, flowPostProcessor));
         return this;
     }
     /**
