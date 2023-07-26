@@ -72,6 +72,11 @@ public class BaseServer implements Server {
     //流控分析后置处理器
     private FlowPostProcessor flowPostProcessor;
 
+    //最大连接限制
+    private int maxConnections;
+    //拒绝策略类型
+    private String disuseStrategyType;
+
     public BaseServer(String serverAddress,
                       String registryAddress,
                       String registryType,
@@ -80,7 +85,8 @@ public class BaseServer implements Server {
                       int heartbeatInterval, int scanNotActiveChannelInterval,
                       boolean enableResultCache, int resultCacheExpire,
                       int corePoolSize, int maxPoolSize,
-                      String flowType){
+                      String flowType,
+                      int maxConnections, String disuseStrategyType){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
@@ -100,6 +106,8 @@ public class BaseServer implements Server {
         this.enableResultCache = enableResultCache;
         this.corePoolSize = corePoolSize;
         this.maxPoolSize = maxPoolSize;
+        this.maxConnections = maxConnections;
+        this.disuseStrategyType = disuseStrategyType;
         this.flowPostProcessor = ExtensionLoader.getExtension(FlowPostProcessor.class, flowType);
     }
 
@@ -133,6 +141,7 @@ public class BaseServer implements Server {
                                     .addLast(RpcConstants.CODEC_HANDLER, new RpcProviderHandler(reflectType,
                                             enableResultCache, resultCacheExpire,
                                             corePoolSize, maxPoolSize,
+                                            maxConnections, disuseStrategyType,
                                             handlerMap));
                         }
                     })
