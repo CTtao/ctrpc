@@ -16,6 +16,7 @@
         <module>ctrpc-disuse-default</module>
         <module>ctrpc-disuse-first</module>
         <module>ctrpc-disuse-last</module>
+        <module>ctrpc-disuse-fifo</module>
     </modules>
 
     <properties>
