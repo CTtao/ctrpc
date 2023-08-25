@@ -43,6 +43,11 @@
             <artifactId>ctrpc-disuse-lfu</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-disuse-lru</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

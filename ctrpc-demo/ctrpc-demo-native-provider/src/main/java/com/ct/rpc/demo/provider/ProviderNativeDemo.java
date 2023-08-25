@@ -22,7 +22,7 @@ public class ProviderNativeDemo {
                 true, 30000,
                 16, 16,
                 "print",
-                1,"lfu");
+                1,"lru");
         singleServer.startNettyServer();
     }
 }
