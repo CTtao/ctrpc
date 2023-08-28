@@ -53,6 +53,11 @@
             <artifactId>ctrpc-disuse-random</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-disuse-refuse</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
