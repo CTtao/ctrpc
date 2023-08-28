@@ -118,6 +118,21 @@ public class RpcClient {
      */
     private int bufferSize;
 
+    /**
+     * 反射类型
+     */
+    private String reflectType;
+
+    /**
+     * 容错class名称
+     */
+    private String fallbackClassName;
+
+    /**
+     * 容错class
+     */
+    private Class<?> fallbackClass;
+
     public RpcClient(String registryAddress, String registryType ,String registryLoadBalanceType,
                      String proxy, String serviceVersion, String serviceGroup, String serializationType,
                      long timeout, boolean async, boolean oneway,
@@ -128,7 +143,8 @@ public class RpcClient {
                      boolean enableDelayConnection,
                      int coolPoolSize, int maxPoolSize,
                      String flowType,
-                     boolean enableBuffer, int bufferSize) {
+                     boolean enableBuffer, int bufferSize,
+                     String reflectType, String fallbackClassName) {
         this.serviceVersion = serviceVersion;
         this.serviceGroup = serviceGroup;
         this.serializationType = serializationType;
@@ -148,6 +164,8 @@ public class RpcClient {
         this.flowType = flowType;
         this.enableBuffer = enableBuffer;
         this.bufferSize = bufferSize;
+        this.reflectType = reflectType;
+        this.fallbackClassName = fallbackClassName;
         this.registryService = getRegistryService(registryAddress, registryType, registryLoadBalanceType);
         this.concurrentThreadPool = ConcurrentThreadPool.getInstance(coolPoolSize, maxPoolSize);
     }
@@ -170,7 +188,8 @@ public class RpcClient {
                         .buildNettyGroup()
                         .buildConnection(registryService),
                 async, oneway,
-                enableResultCache, resultCacheExpire));
+                enableResultCache, resultCacheExpire,
+                reflectType, fallbackClassName, fallbackClass));
         return proxyFactory.getProxy(interfaceClass);
     }
 
@@ -191,7 +210,8 @@ public class RpcClient {
                         .buildNettyGroup()
                         .buildConnection(registryService),
                 async, oneway,
-                enableResultCache, resultCacheExpire);
+                enableResultCache, resultCacheExpire,
+                reflectType, fallbackClassName, fallbackClass);
     }
     public void shutdown(){
         RpcConsumer.getInstance().close();
@@ -209,5 +229,9 @@ public class RpcClient {
             throw new RegistryException(e.getMessage(), e);
         }
         return registryService;
+    }
+
+    public void setFallbackClass(Class<?> fallbackClass) {
+        this.fallbackClass = fallbackClass;
     }
 }

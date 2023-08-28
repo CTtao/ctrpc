@@ -1,6 +1,7 @@
 package com.ct.rpc.demo.provider.impl;
 
 import com.ct.rpc.annotation.RpcService;
+import com.ct.rpc.common.exception.RpcException;
 import com.ct.rpc.demo.api.DemoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,9 @@ public class ProviderDemoServiceImpl implements DemoService {
     @Override
     public String hello(String name) {
         logger.info("调用hello方法传入的参数为===>>>{}", name);
+        if ("ct".equals(name)){
+            throw new RpcException("rpc provider throws exception");
+        }
         return "hello " + name;
     }
 }

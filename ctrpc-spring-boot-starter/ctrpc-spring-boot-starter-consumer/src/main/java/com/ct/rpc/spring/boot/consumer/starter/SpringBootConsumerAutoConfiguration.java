@@ -47,6 +47,8 @@ public class SpringBootConsumerAutoConfiguration {
                 springBootConsumerConfig.getMaxPoolSize(),
                 springBootConsumerConfig.getFlowType(),
                 springBootConsumerConfig.isEnableBuffer(),
-                springBootConsumerConfig.getBufferSize());
+                springBootConsumerConfig.getBufferSize(),
+                springBootConsumerConfig.getReflectType(),
+                springBootConsumerConfig.getFallbackClassName());
     }
 }
