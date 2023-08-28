@@ -22,7 +22,8 @@ public class RpcSingleServerTest {
                 true, 30000,
                 16,16,
                 "print",
-                2, "strategy_default");
+                2, "strategy_default",
+                true,2);
         singleServer.startNettyServer();
     }
 }

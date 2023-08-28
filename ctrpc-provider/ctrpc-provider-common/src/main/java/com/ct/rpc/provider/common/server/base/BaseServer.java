@@ -9,7 +9,6 @@ import com.ct.rpc.provider.common.manager.ProviderConnectionManager;
 import com.ct.rpc.provider.common.server.api.Server;
 import com.ct.rpc.registry.api.RegistryService;
 import com.ct.rpc.registry.api.config.RegistryConfig;
-import com.ct.rpc.registry.zookeeper.ZookeeperRegistryService;
 import com.ct.rpc.spi.loader.ExtensionLoader;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -19,7 +18,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -77,6 +75,16 @@ public class BaseServer implements Server {
     //拒绝策略类型
     private String disuseStrategyType;
 
+    /**
+     * 是否开启缓冲区
+     */
+    private boolean enableBuffer;
+
+    /**
+     * 缓冲区大小
+     */
+    private int bufferSize;
+
     public BaseServer(String serverAddress,
                       String registryAddress,
                       String registryType,
@@ -86,7 +94,8 @@ public class BaseServer implements Server {
                       boolean enableResultCache, int resultCacheExpire,
                       int corePoolSize, int maxPoolSize,
                       String flowType,
-                      int maxConnections, String disuseStrategyType){
+                      int maxConnections, String disuseStrategyType,
+                      boolean enableBuffer, int bufferSize){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
@@ -109,6 +118,8 @@ public class BaseServer implements Server {
         this.maxConnections = maxConnections;
         this.disuseStrategyType = disuseStrategyType;
         this.flowPostProcessor = ExtensionLoader.getExtension(FlowPostProcessor.class, flowType);
+        this.enableBuffer = enableBuffer;
+        this.bufferSize = bufferSize;
     }
 
     private RegistryService getRegistryService(String registryAddress, String registryType, String registryLoadBalanceType){
@@ -142,6 +153,7 @@ public class BaseServer implements Server {
                                             enableResultCache, resultCacheExpire,
                                             corePoolSize, maxPoolSize,
                                             maxConnections, disuseStrategyType,
+                                            enableBuffer, bufferSize,
                                             handlerMap));
                         }
                     })

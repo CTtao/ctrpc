@@ -36,6 +36,8 @@ public class SpringBootProviderAutoConfiguration {
                 springBootProviderConfig.getMaxPoolSize(),
                 springBootProviderConfig.getFlowType(),
                 springBootProviderConfig.getMaxConnections(),
-                springBootProviderConfig.getDisuseStrategyType());
+                springBootProviderConfig.getDisuseStrategyType(),
+                springBootProviderConfig.isEnableBuffer(),
+                springBootProviderConfig.getBufferSize());
     }
 }

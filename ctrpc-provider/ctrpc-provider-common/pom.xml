@@ -72,6 +72,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-buffer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
 
