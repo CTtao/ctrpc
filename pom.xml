@@ -30,6 +30,7 @@
         <module>ctrpc-flow</module>
         <module>ctrpc-connection</module>
         <module>ctrpc-disuse</module>
+        <module>ctrpc-buffer</module>
     </modules>
 
     <properties>
