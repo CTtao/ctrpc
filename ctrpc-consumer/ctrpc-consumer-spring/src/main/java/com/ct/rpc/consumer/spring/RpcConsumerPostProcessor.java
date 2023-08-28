@@ -95,6 +95,8 @@ public class RpcConsumerPostProcessor implements ApplicationContextAware, BeanCl
             builder.addPropertyValue("corePoolSize", annotation.corePoolSize());
             builder.addPropertyValue("maxPoolSize", annotation.maxPoolSize());
             builder.addPropertyValue("flowType", annotation.flowType());
+            builder.addPropertyValue("enableBuffer", annotation.enableBuffer());
+            builder.addPropertyValue("bufferSize", annotation.bufferSize());
 
             BeanDefinition beanDefinition = builder.getBeanDefinition();
             rpcReferenceDefinitions.put(field.getName(), beanDefinition);

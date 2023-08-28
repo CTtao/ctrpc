@@ -119,6 +119,16 @@ public class RpcReferenceBean implements FactoryBean<Object> {
      */
     private String flowType;
 
+    /**
+     * 是否开启缓冲区
+     */
+    private boolean enableBuffer;
+
+    /**
+     * 缓冲区大小
+     */
+    private int bufferSize;
+
 
     @Override
     public Object getObject() throws Exception{
@@ -141,7 +151,8 @@ public class RpcReferenceBean implements FactoryBean<Object> {
                 enableDirectServer, directServerUrl,
                 enableDelayConnection,
                 corePoolSize, maxPoolSize,
-                flowType);
+                flowType,
+                enableBuffer, bufferSize);
         this.object = rpcClient.create(interfaceClass);
     }
 
@@ -324,5 +335,21 @@ public class RpcReferenceBean implements FactoryBean<Object> {
 
     public void setFlowType(String flowType) {
         this.flowType = flowType;
+    }
+
+    public boolean isEnableBuffer() {
+        return enableBuffer;
+    }
+
+    public void setEnableBuffer(boolean enableBuffer) {
+        this.enableBuffer = enableBuffer;
+    }
+
+    public int getBufferSize() {
+        return bufferSize;
+    }
+
+    public void setBufferSize(int bufferSize) {
+        this.bufferSize = bufferSize;
     }
 }

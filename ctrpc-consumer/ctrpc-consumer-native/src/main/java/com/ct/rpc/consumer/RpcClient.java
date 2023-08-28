@@ -108,6 +108,16 @@ public class RpcClient {
      */
     private String flowType;
 
+    /**
+     * 是否开启数据缓冲
+     */
+    private boolean enableBuffer;
+
+    /**
+     * 缓冲区大小
+     */
+    private int bufferSize;
+
     public RpcClient(String registryAddress, String registryType ,String registryLoadBalanceType,
                      String proxy, String serviceVersion, String serviceGroup, String serializationType,
                      long timeout, boolean async, boolean oneway,
@@ -117,7 +127,8 @@ public class RpcClient {
                      boolean enableDirectServer, String directServerUrl,
                      boolean enableDelayConnection,
                      int coolPoolSize, int maxPoolSize,
-                     String flowType) {
+                     String flowType,
+                     boolean enableBuffer, int bufferSize) {
         this.serviceVersion = serviceVersion;
         this.serviceGroup = serviceGroup;
         this.serializationType = serializationType;
@@ -135,6 +146,8 @@ public class RpcClient {
         this.directServerUrl = directServerUrl;
         this.enableDelayConnection = enableDelayConnection;
         this.flowType = flowType;
+        this.enableBuffer = enableBuffer;
+        this.bufferSize = bufferSize;
         this.registryService = getRegistryService(registryAddress, registryType, registryLoadBalanceType);
         this.concurrentThreadPool = ConcurrentThreadPool.getInstance(coolPoolSize, maxPoolSize);
     }
@@ -152,6 +165,8 @@ public class RpcClient {
                         .setEnableDelayConnection(enableDelayConnection)
                         .setConcurrentThreadPool(concurrentThreadPool)
                         .setFlowPostProcessor(flowType)
+                        .setEnableBuffer(enableBuffer)
+                        .setBufferSize(bufferSize)
                         .buildNettyGroup()
                         .buildConnection(registryService),
                 async, oneway,
@@ -171,6 +186,8 @@ public class RpcClient {
                         .setEnableDelayConnection(enableDelayConnection)
                         .setConcurrentThreadPool(concurrentThreadPool)
                         .setFlowPostProcessor(flowType)
+                        .setEnableBuffer(enableBuffer)
+                        .setBufferSize(bufferSize)
                         .buildNettyGroup()
                         .buildConnection(registryService),
                 async, oneway,

@@ -34,5 +34,7 @@
         <constructor-arg name="coolPoolSize" value="${consumer.corePoolSize}"/>
         <constructor-arg name="maxPoolSize" value="${consumer.maxPoolSize}"/>
         <constructor-arg name="flowType" value="${consumer.flowType}"/>
+        <constructor-arg name="enableBuffer" value="${consumer.enableBuffer}"/>
+        <constructor-arg name="bufferSize" value="${consumer.bufferSize}"/>
     </bean>
 </beans>
