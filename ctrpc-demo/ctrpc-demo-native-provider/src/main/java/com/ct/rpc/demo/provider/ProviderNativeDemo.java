@@ -17,7 +17,7 @@ public class ProviderNativeDemo {
                 "zookeeper",
                 "random",
                 "com.ct.rpc.demo",
-                "jdk",
+                "asm",
                 30000,60000,
                 true, 30000,
                 16, 16,
