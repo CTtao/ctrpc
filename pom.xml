@@ -31,6 +31,7 @@
         <module>ctrpc-connection</module>
         <module>ctrpc-disuse</module>
         <module>ctrpc-buffer</module>
+        <module>ctrpc-ratelimiter</module>
     </modules>
 
     <properties>
