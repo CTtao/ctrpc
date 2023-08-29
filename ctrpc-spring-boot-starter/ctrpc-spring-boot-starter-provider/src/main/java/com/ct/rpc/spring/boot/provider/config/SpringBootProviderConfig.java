@@ -82,6 +82,15 @@ public final class SpringBootProviderConfig {
      */
     private int bufferSize;
 
+    //是否开启限流
+    private boolean enableRateLimiter;
+    //限流类型
+    private String rateLimiterType;
+    //在单位周期内最多能够通过的请求个数
+    private int permits;
+    //单位周期
+    private int milliSeconds;
+
     public SpringBootProviderConfig() {
     }
 
@@ -91,7 +100,8 @@ public final class SpringBootProviderConfig {
                                     final int corePoolSize, final int maxPoolSize,
                                     final String flowType,
                                     final int maxConnections, final String disuseStrategyType,
-                                    final boolean enableBuffer, final int bufferSize) {
+                                    final boolean enableBuffer, final int bufferSize,
+                                    final boolean enableRateLimiter, final String rateLimiterType, final int permits, final int milliSeconds) {
         this.serverAddress = serverAddress;
         this.registryAddress = registryAddress;
         this.registryType = registryType;
@@ -110,6 +120,10 @@ public final class SpringBootProviderConfig {
         this.disuseStrategyType = disuseStrategyType;
         this.enableBuffer = enableBuffer;
         this.bufferSize = bufferSize;
+        this.enableRateLimiter = enableRateLimiter;
+        this.rateLimiterType = rateLimiterType;
+        this.permits = permits;
+        this.milliSeconds = milliSeconds;
     }
 
     public String getServerAddress() {
@@ -238,5 +252,37 @@ public final class SpringBootProviderConfig {
 
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
+    }
+
+    public boolean isEnableRateLimiter() {
+        return enableRateLimiter;
+    }
+
+    public void setEnableRateLimiter(boolean enableRateLimiter) {
+        this.enableRateLimiter = enableRateLimiter;
+    }
+
+    public String getRateLimiterType() {
+        return rateLimiterType;
+    }
+
+    public void setRateLimiterType(String rateLimiterType) {
+        this.rateLimiterType = rateLimiterType;
+    }
+
+    public int getPermits() {
+        return permits;
+    }
+
+    public void setPermits(int permits) {
+        this.permits = permits;
+    }
+
+    public int getMilliSeconds() {
+        return milliSeconds;
+    }
+
+    public void setMilliSeconds(int milliSeconds) {
+        this.milliSeconds = milliSeconds;
     }
 }

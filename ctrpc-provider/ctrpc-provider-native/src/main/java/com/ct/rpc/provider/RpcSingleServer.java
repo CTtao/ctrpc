@@ -21,13 +21,15 @@ public class RpcSingleServer extends BaseServer {
                            int corePoolSize, int maxPoolSize,
                            String flowType,
                            int maxConnections, String disuseStrategyType,
-                           boolean enableBuffer, int bufferSize) {
+                           boolean enableBuffer, int bufferSize,
+                           boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds) {
         super(serverAddress, registerAddress, registerType, registryLoadBalanceType, reflectType,
                 heartbeatInterval, scanNotActiveChannelInterval,
                 enableResultCache, resultCacheExpire,
                 corePoolSize, maxPoolSize, flowType,
                 maxConnections, disuseStrategyType,
-                enableBuffer, bufferSize);
+                enableBuffer, bufferSize,
+                enableRateLimiter, rateLimiterType, permits, milliSeconds);
         try {
             this.handlerMap = RpcServiceScanner.doScannerWithRpcServiceAnnotationFilterAndRegistryService(this.host, this.port, scanPackage, registryService);
         } catch (Exception e){

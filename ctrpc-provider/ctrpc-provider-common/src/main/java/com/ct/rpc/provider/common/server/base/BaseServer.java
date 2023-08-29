@@ -85,6 +85,15 @@ public class BaseServer implements Server {
      */
     private int bufferSize;
 
+    //是否开启限流
+    private boolean enableRateLimiter;
+    //限流类型
+    private String rateLimiterType;
+    //在单位周期内最多能够通过的请求个数
+    private int permits;
+    //单位周期
+    private int milliSeconds;
+
     public BaseServer(String serverAddress,
                       String registryAddress,
                       String registryType,
@@ -95,7 +104,8 @@ public class BaseServer implements Server {
                       int corePoolSize, int maxPoolSize,
                       String flowType,
                       int maxConnections, String disuseStrategyType,
-                      boolean enableBuffer, int bufferSize){
+                      boolean enableBuffer, int bufferSize,
+                      boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
@@ -120,6 +130,10 @@ public class BaseServer implements Server {
         this.flowPostProcessor = ExtensionLoader.getExtension(FlowPostProcessor.class, flowType);
         this.enableBuffer = enableBuffer;
         this.bufferSize = bufferSize;
+        this.enableRateLimiter = enableRateLimiter;
+        this.rateLimiterType = rateLimiterType;
+        this.permits = permits;
+        this.milliSeconds = milliSeconds;
     }
 
     private RegistryService getRegistryService(String registryAddress, String registryType, String registryLoadBalanceType){
@@ -154,6 +168,7 @@ public class BaseServer implements Server {
                                             corePoolSize, maxPoolSize,
                                             maxConnections, disuseStrategyType,
                                             enableBuffer, bufferSize,
+                                            enableRateLimiter, rateLimiterType, permits, milliSeconds,
                                             handlerMap));
                         }
                     })

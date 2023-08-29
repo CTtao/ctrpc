@@ -64,11 +64,20 @@ public class SpringAnnotationProviderConfig {
     @Value("${server.disuseStrategyType}")
     private String disuseStrategyType;
 
-    @Value("server.enableBuffer")
+    @Value("${server.enableBuffer}")
     private boolean enableBuffer;
 
-    @Value("server.bufferSize")
+    @Value("${server.bufferSize}")
     private int bufferSize;
+
+    @Value("${server.enableRateLimiter}")
+    private boolean enableRateLimiter;
+    @Value("${server.rateLimiterType}")
+    private String rateLimiterType;
+    @Value("${server.permits}")
+    private int permits;
+    @Value("${server.milliSeconds}")
+    private int milliSeconds;
 
     @Bean
     public RpcSpringServer rpcSpringServer(){
@@ -78,7 +87,8 @@ public class SpringAnnotationProviderConfig {
                 corePoolSize, maxPoolSize,
                 flowType,
                 maxConnections, disuseStrategyType,
-                enableBuffer, bufferSize);
+                enableBuffer, bufferSize,
+                enableRateLimiter, rateLimiterType, permits, milliSeconds);
     }
 
 }
