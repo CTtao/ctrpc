@@ -23,7 +23,7 @@ public class ConsumerNativeDemo {
     public void initRpcClient(){
         rpcClient = new RpcClient("127.0.0.1:2181",
                 "zookeeper",
-                "enhanced_leastconnections",
+                "zkconsistenthash",
                 "asm",
                 "1.0.0",
                 "ct",
@@ -38,7 +38,7 @@ public class ConsumerNativeDemo {
                 false,
                 16, 16,
                 "print",
-                true,2,
+                false,2,
                 "jdk", "com.ct.rpc.demo.consumer.hello.FallbackDemoServiceImpl",
                 true, "counter", 100, 1000);
     }
@@ -46,8 +46,10 @@ public class ConsumerNativeDemo {
     @Test
     public void testInterfaceRpc() throws InterruptedException{
         DemoService demoService = rpcClient.create(DemoService.class);
-        String result = demoService.hello("ct");
-        LOGGER.info("返回的结果数据为===>>>" + result);
+        for (int i = 0; i < 5; i++) {
+            String result = demoService.hello("ct");
+            LOGGER.info("返回的结果数据为===>>>" + result);
+        }
 //        rpcClient.shutdown();
         while (true){
             Thread.sleep(1000);

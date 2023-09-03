@@ -93,6 +93,8 @@ public class BaseServer implements Server {
     private int permits;
     //单位周期
     private int milliSeconds;
+    //当限流失败时的处理策略
+    private String rateLimiterFailStrategy;
 
     public BaseServer(String serverAddress,
                       String registryAddress,
@@ -105,7 +107,8 @@ public class BaseServer implements Server {
                       String flowType,
                       int maxConnections, String disuseStrategyType,
                       boolean enableBuffer, int bufferSize,
-                      boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds){
+                      boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds,
+                      String rateLimiterFailStrategy){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
@@ -134,6 +137,7 @@ public class BaseServer implements Server {
         this.rateLimiterType = rateLimiterType;
         this.permits = permits;
         this.milliSeconds = milliSeconds;
+        this.rateLimiterFailStrategy = rateLimiterFailStrategy;
     }
 
     private RegistryService getRegistryService(String registryAddress, String registryType, String registryLoadBalanceType){
@@ -169,6 +173,7 @@ public class BaseServer implements Server {
                                             maxConnections, disuseStrategyType,
                                             enableBuffer, bufferSize,
                                             enableRateLimiter, rateLimiterType, permits, milliSeconds,
+                                            rateLimiterFailStrategy,
                                             handlerMap));
                         }
                     })
