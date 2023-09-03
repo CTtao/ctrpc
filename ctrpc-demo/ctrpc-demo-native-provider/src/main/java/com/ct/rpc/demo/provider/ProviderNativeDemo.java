@@ -24,7 +24,7 @@ public class ProviderNativeDemo {
                 "print",
                 1,"refuse",
                 false,2,
-                true, "counter", 100, 1000);
+                true, "semaphore", 100, 1000);
         singleServer.startNettyServer();
     }
 }
