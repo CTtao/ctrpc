@@ -118,6 +118,10 @@ public class ProxyConfig<T> implements Serializable {
         this.reflectType = reflectType;
         this.fallbackClassName = fallbackClassName;
         this.fallbackClass = fallbackClass;
+        this.enableRateLimiter = enableRateLimiter;
+        this.rateLimiterType = rateLimiterType;
+        this.permits = permits;
+        this.milliSeconds = milliSeconds;
     }
 
     public RegistryService getRegistryService() {
