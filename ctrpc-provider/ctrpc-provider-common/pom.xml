@@ -88,7 +88,11 @@
             <artifactId>ctrpc-ratelimiter-semaphore</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-ratelimiter-guava</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 
