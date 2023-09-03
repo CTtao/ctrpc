@@ -57,6 +57,12 @@
             <artifactId>ctrpc-reflect-asm</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-ratelimiter-counter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

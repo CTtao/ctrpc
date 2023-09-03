@@ -39,7 +39,8 @@ public class ConsumerNativeDemo {
                 16, 16,
                 "print",
                 true,2,
-                "jdk", "com.ct.rpc.demo.consumer.hello.FallbackDemoServiceImpl");
+                "jdk", "com.ct.rpc.demo.consumer.hello.FallbackDemoServiceImpl",
+                true, "counter", 100, 1000);
     }
 
     @Test

@@ -49,6 +49,10 @@ public class SpringBootConsumerAutoConfiguration {
                 springBootConsumerConfig.isEnableBuffer(),
                 springBootConsumerConfig.getBufferSize(),
                 springBootConsumerConfig.getReflectType(),
-                springBootConsumerConfig.getFallbackClassName());
+                springBootConsumerConfig.getFallbackClassName(),
+                springBootConsumerConfig.isEnableRateLimiter(),
+                springBootConsumerConfig.getRateLimiterType(),
+                springBootConsumerConfig.getPermits(),
+                springBootConsumerConfig.getMilliSeconds());
     }
 }
