@@ -25,7 +25,8 @@ public class RpcSingleServerTest {
                 2, "strategy_default",
                 true,2,
                 true, "counter", 100, 1000,
-                "exception");
+                "exception",
+                true, "counter", 1, 5000);
         singleServer.startNettyServer();
     }
 }

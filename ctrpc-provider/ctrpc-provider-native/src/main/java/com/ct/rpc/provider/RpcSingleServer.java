@@ -23,7 +23,8 @@ public class RpcSingleServer extends BaseServer {
                            int maxConnections, String disuseStrategyType,
                            boolean enableBuffer, int bufferSize,
                            boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds,
-                           String rateLimiterFailStrategy) {
+                           String rateLimiterFailStrategy,
+                           boolean enableFusing, String fusingType, double totalFailure, int fusingMilliSeconds) {
         super(serverAddress, registerAddress, registerType, registryLoadBalanceType, reflectType,
                 heartbeatInterval, scanNotActiveChannelInterval,
                 enableResultCache, resultCacheExpire,
@@ -31,8 +32,8 @@ public class RpcSingleServer extends BaseServer {
                 maxConnections, disuseStrategyType,
                 enableBuffer, bufferSize,
                 enableRateLimiter, rateLimiterType, permits, milliSeconds,
-                rateLimiterFailStrategy
-                );
+                rateLimiterFailStrategy,
+                enableFusing, fusingType, totalFailure, fusingMilliSeconds);
         try {
             this.handlerMap = RpcServiceScanner.doScannerWithRpcServiceAnnotationFilterAndRegistryService(this.host, this.port, scanPackage, registryService);
         } catch (Exception e){

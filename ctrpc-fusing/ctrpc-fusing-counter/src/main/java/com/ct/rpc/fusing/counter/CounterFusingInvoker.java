@@ -16,20 +16,26 @@ public class CounterFusingInvoker extends AbstractFusingInvoker {
     private final Logger logger = LoggerFactory.getLogger(CounterFusingInvoker.class);
     @Override
     public boolean invokeFusingStrategy() {
-        logger.info("execute counter fusing strategy, current fusing status is {}", fusingStatus.get());
+        boolean result = false;
         switch (fusingStatus.get()){
             //关闭状态
             case RpcConstants.FUSING_STATUS_CLOSED:
-                return invokeClosedFusingStrategy();
+                result = invokeClosedFusingStrategy();
+                break;
             //半开启状态
             case RpcConstants.FUSING_STATUS_HALF_OPEN:
-                return invokeHalfOpenFusingStrategy();
+                result = invokeHalfOpenFusingStrategy();
+                break;
             //开启状态
             case RpcConstants.FUSING_STATUS_OPEN:
-                return invokeOpenFusingStrategy();
+                result = invokeOpenFusingStrategy();
+                break;
             default:
-                return invokeClosedFusingStrategy();
+                result = invokeClosedFusingStrategy();
+                break;
         }
+        logger.info("execute counter fusing strategy, current fusing status is {}", fusingStatus.get());
+        return result;
     }
 
 

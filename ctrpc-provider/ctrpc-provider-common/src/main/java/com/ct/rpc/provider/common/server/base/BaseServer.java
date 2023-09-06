@@ -96,6 +96,15 @@ public class BaseServer implements Server {
     //当限流失败时的处理策略
     private String rateLimiterFailStrategy;
 
+    //是否开启熔断策略
+    private boolean enableFusing;
+    //熔断规则标识
+    private String fusingType;
+    //在fusingMilliSeconds毫秒内触发熔断操作的上限值
+    private double totalFailure;
+    //熔断的毫秒时长
+    private int fusingMilliSeconds;
+
     public BaseServer(String serverAddress,
                       String registryAddress,
                       String registryType,
@@ -108,7 +117,8 @@ public class BaseServer implements Server {
                       int maxConnections, String disuseStrategyType,
                       boolean enableBuffer, int bufferSize,
                       boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds,
-                      String rateLimiterFailStrategy){
+                      String rateLimiterFailStrategy,
+                      boolean enableFusing, String fusingType, double totalFailure, int fusingMilliSeconds){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
@@ -138,6 +148,10 @@ public class BaseServer implements Server {
         this.permits = permits;
         this.milliSeconds = milliSeconds;
         this.rateLimiterFailStrategy = rateLimiterFailStrategy;
+        this.enableFusing = enableFusing;
+        this.fusingType = fusingType;
+        this.totalFailure = totalFailure;
+        this.fusingMilliSeconds = fusingMilliSeconds;
     }
 
     private RegistryService getRegistryService(String registryAddress, String registryType, String registryLoadBalanceType){
@@ -174,6 +188,7 @@ public class BaseServer implements Server {
                                             enableBuffer, bufferSize,
                                             enableRateLimiter, rateLimiterType, permits, milliSeconds,
                                             rateLimiterFailStrategy,
+                                            enableFusing, fusingType, totalFailure, fusingMilliSeconds,
                                             handlerMap));
                         }
                     })
