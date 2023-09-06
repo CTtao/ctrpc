@@ -185,6 +185,11 @@ public class RpcReferenceBean implements FactoryBean<Object> {
      */
     private int fusingMilliSeconds;
 
+    /**
+     * 异常处理类型
+     */
+    private String exceptionPostProcessorType;
+
     @Override
     public Object getObject() throws Exception{
         return object;
@@ -211,7 +216,8 @@ public class RpcReferenceBean implements FactoryBean<Object> {
                 reflectType, fallbackClassName,
                 enableRateLimiter, rateLimiterType, permits, milliSeconds,
                 rateLimiterFailStrategy,
-                enableFusing, fusingType, totalFailure, fusingMilliSeconds);
+                enableFusing, fusingType, totalFailure, fusingMilliSeconds,
+                exceptionPostProcessorType);
         rpcClient.setFallbackClass(fallbackClass);
         this.object = rpcClient.create(interfaceClass);
     }
@@ -507,5 +513,13 @@ public class RpcReferenceBean implements FactoryBean<Object> {
 
     public void setFusingMilliSeconds(int fusingMilliSeconds) {
         this.fusingMilliSeconds = fusingMilliSeconds;
+    }
+
+    public String getExceptionPostProcessorType() {
+        return exceptionPostProcessorType;
+    }
+
+    public void setExceptionPostProcessorType(String exceptionPostProcessorType) {
+        this.exceptionPostProcessorType = exceptionPostProcessorType;
     }
 }

@@ -4,6 +4,7 @@ import com.ct.rpc.codec.RpcDecoder;
 import com.ct.rpc.codec.RpcEncoder;
 import com.ct.rpc.constants.RpcConstants;
 import com.ct.rpc.consumer.common.handler.RpcConsumerHandler;
+import com.ct.rpc.exception.processor.ExceptionPostProcessor;
 import com.ct.rpc.flow.processor.FlowPostProcessor;
 import com.ct.rpc.threadpool.ConcurrentThreadPool;
 import io.netty.channel.ChannelInitializer;
@@ -25,6 +26,8 @@ public class RpcConsumerInitializer extends ChannelInitializer<SocketChannel> {
     private ConcurrentThreadPool concurrentThreadPool;
 
     private FlowPostProcessor flowPostProcessor;
+    //异常处理后置处理器
+    private ExceptionPostProcessor exceptionPostProcessor;
 
     private boolean enableBuffer;
 
@@ -32,7 +35,8 @@ public class RpcConsumerInitializer extends ChannelInitializer<SocketChannel> {
 
     public RpcConsumerInitializer(int heartbeatInterval,
                                   boolean enableBuffer, int bufferSize,
-                                  ConcurrentThreadPool concurrentThreadPool, FlowPostProcessor flowPostProcessor) {
+                                  ConcurrentThreadPool concurrentThreadPool, FlowPostProcessor flowPostProcessor,
+                                  ExceptionPostProcessor exceptionPostProcessor) {
         if (heartbeatInterval > 0){
             this.heartbeatInterval = heartbeatInterval;
         }
@@ -40,6 +44,7 @@ public class RpcConsumerInitializer extends ChannelInitializer<SocketChannel> {
         this.flowPostProcessor = flowPostProcessor;
         this.enableBuffer = enableBuffer;
         this.bufferSize = bufferSize;
+        this.exceptionPostProcessor = exceptionPostProcessor;
     }
 
     @Override
@@ -48,6 +53,6 @@ public class RpcConsumerInitializer extends ChannelInitializer<SocketChannel> {
         cp.addLast(RpcConstants.CODEC_ENCODER, new RpcEncoder(flowPostProcessor));
         cp.addLast(RpcConstants.CODEC_DECODER, new RpcDecoder(flowPostProcessor));
         cp.addLast(RpcConstants.CODEC_CLIENT_IDLE_HANDLER, new IdleStateHandler(heartbeatInterval, 0, 0, TimeUnit.MILLISECONDS));
-        cp.addLast(RpcConstants.CODEC_HANDLER, new RpcConsumerHandler(enableBuffer, bufferSize, concurrentThreadPool));
+        cp.addLast(RpcConstants.CODEC_HANDLER, new RpcConsumerHandler(enableBuffer, bufferSize, concurrentThreadPool, exceptionPostProcessor));
     }
 }

@@ -6,6 +6,7 @@ import com.ct.rpc.buffer.object.BufferObject;
 import com.ct.rpc.constants.RpcConstants;
 import com.ct.rpc.consumer.common.cache.ConsumerChannelCache;
 import com.ct.rpc.consumer.common.context.RpcContext;
+import com.ct.rpc.exception.processor.ExceptionPostProcessor;
 import com.ct.rpc.protocol.enumeration.RpcStatus;
 import com.ct.rpc.protocol.enumeration.RpcType;
 import com.ct.rpc.protocol.header.RpcHeaderFactory;
@@ -48,8 +49,14 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
 
     private BufferCacheManager<RpcProtocol<RpcResponse>> bufferCacheManager;
 
-    public RpcConsumerHandler(boolean enableBuffer, int bufferSize, ConcurrentThreadPool concurrentThreadPool){
+    /**
+     * 异常后置处理器
+     */
+    private ExceptionPostProcessor exceptionPostProcessor;
+
+    public RpcConsumerHandler(boolean enableBuffer, int bufferSize, ConcurrentThreadPool concurrentThreadPool, ExceptionPostProcessor exceptionPostProcessor){
         this.concurrentThreadPool = concurrentThreadPool;
+        this.exceptionPostProcessor = exceptionPostProcessor;
         this.enableBuffer = enableBuffer;
         if (enableBuffer){
             this.bufferCacheManager = BufferCacheManager.getInstance(bufferSize);
@@ -227,5 +234,11 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
     public void close(){
         channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
         ConsumerChannelCache.remove(channel);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        exceptionPostProcessor.postExceptionProcessor(cause);
+        super.exceptionCaught(ctx, cause);
     }
 }

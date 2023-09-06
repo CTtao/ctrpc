@@ -9,6 +9,7 @@ import com.ct.rpc.consumer.common.handler.RpcConsumerHandler;
 import com.ct.rpc.consumer.common.helper.RpcConsumerHandlerHelper;
 import com.ct.rpc.consumer.common.initializer.RpcConsumerInitializer;
 import com.ct.rpc.consumer.common.manager.ConsumerConnectionManager;
+import com.ct.rpc.exception.processor.ExceptionPostProcessor;
 import com.ct.rpc.flow.processor.FlowPostProcessor;
 import com.ct.rpc.loadbalancer.context.ConnectionsContext;
 import com.ct.rpc.protocol.RpcProtocol;
@@ -91,6 +92,9 @@ public class RpcConsumer implements Consumer {
     //流控分析后置处理器
     private FlowPostProcessor flowPostProcessor;
 
+    //异常处理后置处理器
+    private ExceptionPostProcessor exceptionPostProcessor;
+
     //是否开启数据缓冲
     private boolean enableBuffer;
     //缓冲区大小
@@ -153,6 +157,14 @@ public class RpcConsumer implements Consumer {
         return this;
     }
 
+    public RpcConsumer setExceptionPostProcessor(String exceptionPostProcessorType){
+        if (StringUtils.isEmpty(exceptionPostProcessorType)){
+            exceptionPostProcessorType = RpcConstants.EXCEPTION_POST_PROCESSOR_PRINT;
+        }
+        this.exceptionPostProcessor = ExtensionLoader.getExtension(ExceptionPostProcessor.class, exceptionPostProcessorType);
+        return this;
+    }
+
     public RpcConsumer setEnableBuffer(boolean enableBuffer) {
         this.enableBuffer = enableBuffer;
         return this;
@@ -167,7 +179,7 @@ public class RpcConsumer implements Consumer {
         bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
                 .handler(new RpcConsumerInitializer(heartbeatInterval,
                         enableBuffer, bufferSize,
-                        concurrentThreadPool, flowPostProcessor));
+                        concurrentThreadPool, flowPostProcessor, exceptionPostProcessor));
         return this;
     }
     /**

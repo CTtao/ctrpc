@@ -58,6 +58,7 @@ public class SpringBootConsumerAutoConfiguration {
                 springBootConsumerConfig.isEnableFusing(),
                 springBootConsumerConfig.getFusingType(),
                 springBootConsumerConfig.getTotalFailure(),
-                springBootConsumerConfig.getMilliSeconds());
+                springBootConsumerConfig.getMilliSeconds(),
+                springBootConsumerConfig.getExceptionPostProcessorType());
     }
 }

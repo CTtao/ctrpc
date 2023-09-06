@@ -74,5 +74,7 @@ ctrpc:
       totalFailure: 10
       # fusingMilliSeconds
       fusingMilliSeconds: 5000
+      # exceptionPostProcessorType
+      exceptionPostProcessorType: print
 
 

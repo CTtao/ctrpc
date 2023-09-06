@@ -42,7 +42,8 @@ public class ConsumerNativeDemo {
                 "jdk", "com.ct.rpc.demo.consumer.hello.FallbackDemoServiceImpl",
                 false, "counter", 1, 5000,
                 "fallback",
-                true,"percent",10,10000);
+                true,"percent",10,10000,
+                "print");
     }
 
     @Test
