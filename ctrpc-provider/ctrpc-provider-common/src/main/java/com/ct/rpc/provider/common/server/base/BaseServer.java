@@ -104,6 +104,8 @@ public class BaseServer implements Server {
     private double totalFailure;
     //熔断的毫秒时长
     private int fusingMilliSeconds;
+    //异常后置处理器标识
+    private String exceptionPostProcessorType;
 
     public BaseServer(String serverAddress,
                       String registryAddress,
@@ -118,7 +120,8 @@ public class BaseServer implements Server {
                       boolean enableBuffer, int bufferSize,
                       boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds,
                       String rateLimiterFailStrategy,
-                      boolean enableFusing, String fusingType, double totalFailure, int fusingMilliSeconds){
+                      boolean enableFusing, String fusingType, double totalFailure, int fusingMilliSeconds,
+                      String exceptionPostProcessorType){
         if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
@@ -152,6 +155,7 @@ public class BaseServer implements Server {
         this.fusingType = fusingType;
         this.totalFailure = totalFailure;
         this.fusingMilliSeconds = fusingMilliSeconds;
+        this.exceptionPostProcessorType = exceptionPostProcessorType;
     }
 
     private RegistryService getRegistryService(String registryAddress, String registryType, String registryLoadBalanceType){
@@ -189,6 +193,7 @@ public class BaseServer implements Server {
                                             enableRateLimiter, rateLimiterType, permits, milliSeconds,
                                             rateLimiterFailStrategy,
                                             enableFusing, fusingType, totalFailure, fusingMilliSeconds,
+                                            exceptionPostProcessorType,
                                             handlerMap));
                         }
                     })

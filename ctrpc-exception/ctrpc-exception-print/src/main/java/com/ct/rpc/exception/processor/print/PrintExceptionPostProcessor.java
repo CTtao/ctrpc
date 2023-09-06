@@ -16,6 +16,6 @@ public class PrintExceptionPostProcessor implements ExceptionPostProcessor {
 
     @Override
     public void postExceptionProcessor(Throwable t) {
-        logger.info("程序抛出了异常===>>>{}", t);
+        logger.info("程序抛出了异常===>>>{}",t);
     }
 }

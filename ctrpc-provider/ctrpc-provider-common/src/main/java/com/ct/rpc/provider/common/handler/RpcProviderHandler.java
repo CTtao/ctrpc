@@ -8,6 +8,7 @@ import com.ct.rpc.common.helper.RpcServiceHelper;
 import com.ct.rpc.common.utils.StringUtils;
 import com.ct.rpc.connection.manager.ConnectionManager;
 import com.ct.rpc.constants.RpcConstants;
+import com.ct.rpc.exception.processor.ExceptionPostProcessor;
 import com.ct.rpc.fusing.api.FusingInvoker;
 import com.ct.rpc.protocol.RpcProtocol;
 import com.ct.rpc.protocol.enumeration.RpcStatus;
@@ -103,6 +104,11 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
      */
     private FusingInvoker fusingInvoker;
 
+    /**
+     * 异常后置处理器
+     */
+    private ExceptionPostProcessor exceptionPostProcessor;
+
 
     public RpcProviderHandler(String reflectType,
                               boolean enableResultCache, int resultCacheExpire,
@@ -112,6 +118,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
                               boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds,
                               String rateLimiterFailStrategy,
                               boolean enableFusing, String fusingType, double totalFailure, int fusingMilliSeconds,
+                              String exceptionPostProcessorType,
                               Map<String, Object> handlerMap){
 //        this.reflectType = reflectType;
         this.handlerMap = handlerMap;
@@ -133,6 +140,10 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
         this.rateLimiterFailStrategy = rateLimiterFailStrategy;
         this.enableFusing = enableFusing;
         this.initFusing(fusingType, totalFailure, fusingMilliSeconds);
+        if (StringUtils.isEmpty(exceptionPostProcessorType)){
+            exceptionPostProcessorType = RpcConstants.EXCEPTION_POST_PROCESSOR_PRINT;
+        }
+        this.exceptionPostProcessor = ExtensionLoader.getExtension(ExceptionPostProcessor.class, exceptionPostProcessorType);
     }
 
     /**
@@ -429,6 +440,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
             response.setOneway(request.isOneway());
             header.setStatus((byte) RpcStatus.SUCCESS.getCode());
         } catch (Throwable t){
+            exceptionPostProcessor.postExceptionProcessor(t);
             response.setError(t.toString());
             header.setStatus((byte) RpcStatus.FAIL.getCode());
             logger.error("RPC server handle request error", t);
@@ -475,6 +487,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         logger.error("server caught exception",cause);
+        exceptionPostProcessor.postExceptionProcessor(cause);
         ProviderChannelCache.remove(ctx.channel());
         connectionManager.remove(ctx.channel());
         ctx.close();

@@ -104,6 +104,12 @@
             <artifactId>ctrpc-fusing-percent</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-exception-print</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 
