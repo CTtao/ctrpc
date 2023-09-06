@@ -34,13 +34,14 @@ public class ConsumerNativeDemo {
                 30000, 60000,
                 1000, 3,
                 false, 10000,
-                true, "127.0.0.1:27880",
-                false,
+                false, "127.0.0.1:27880",
+                true,
                 16, 16,
                 "print",
                 false,2,
                 "jdk", "com.ct.rpc.demo.consumer.hello.FallbackDemoServiceImpl",
-                true, "counter", 100, 1000);
+                true, "counter", 1, 5000,
+                "fallback");
     }
 
     @Test

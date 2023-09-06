@@ -78,6 +78,11 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
      */
     private boolean enableRateLimiter;
 
+    /**
+     * 限流失败时的处理策略
+     */
+    private String rateLimiterFailStrategy;
+
     public ObjectProxy(Class<T> clazz){
         this.clazz = clazz;
     }
@@ -87,7 +92,8 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
                        boolean async, boolean oneway,
                        boolean enableResultCache, int resultCacheExpire,
                        String reflectType, String fallbackClassName, Class<?> fallbackClass,
-                       boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds) {
+                       boolean enableRateLimiter, String rateLimiterType, int permits, int milliSeconds,
+                       String rateLimiterFailStrategy) {
         this.clazz = clazz;
         this.serviceVersion = serviceVersion;
         this.serviceGroup = serviceGroup;
@@ -106,6 +112,10 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
         this.fallbackClass = getFallbackClass(fallbackClassName, fallbackClass);
         this.enableRateLimiter = enableRateLimiter;
         this.initRateLimiter(rateLimiterType, permits, milliSeconds);
+        if (StringUtils.isEmpty(rateLimiterFailStrategy)){
+            rateLimiterFailStrategy = RpcConstants.RATE_LIMILTER_FAIL_STRATEGY_DIRECT;
+        }
+        this.rateLimiterFailStrategy = rateLimiterFailStrategy;
     }
 
     /**
@@ -184,10 +194,6 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
         try {
             return invokeSendRequestMethodWithRateLimiter(method, args);
         } catch (Throwable t){
-            //fallback不为空，则执行容错处理
-            if (this.isFallbackClassEmpty(fallbackClass)){
-                return null;
-            }
             return getFallbackResult(method, args);
         }
     }
@@ -205,7 +211,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
                     rateLimiterInvoker.release();
                 }
             }else {
-                //todo 各种策略
+                result = this.invokeFailRateLimiterMethod(method, args);
             }
         } else {
             result = invokeSendRequestMethod(method, args);
@@ -213,6 +219,20 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
         return result;
     }
 
+    /**
+     * 执行限流失败时的处理逻辑
+     */
+    private Object invokeFailRateLimiterMethod(Method method, Object[] args) throws Exception{
+        LOGGER.info("execute {} fail rate limiter strategy...", rateLimiterFailStrategy);
+        switch (rateLimiterFailStrategy){
+            case RpcConstants.RATE_LIMILTER_FAIL_STRATEGY_EXCEPTION:
+            case RpcConstants.RATE_LIMILTER_FAIL_STRATEGY_FALLBACK:
+                return this.getFallbackResult(method, args);
+            case RpcConstants.RATE_LIMILTER_FAIL_STRATEGY_DIRECT:
+                return this.invokeSendRequestMethod(method, args);
+        }
+        return this.invokeSendRequestMethod(method, args);
+    }
     /**
      * 真正调用远程方法
      */
@@ -227,6 +247,10 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
      */
     private Object getFallbackResult(Method method, Object[] args){
         try {
+            //fallbackClass不为空，则执行容错处理
+            if (this.isFallbackClassEmpty(fallbackClass)){
+                return null;
+            }
             return reflectInvoker.invokeMethod(fallbackClass.newInstance(), fallbackClass, method.getName(), method.getParameterTypes(), args);
         } catch (Throwable t){
             LOGGER.error(t.getMessage());

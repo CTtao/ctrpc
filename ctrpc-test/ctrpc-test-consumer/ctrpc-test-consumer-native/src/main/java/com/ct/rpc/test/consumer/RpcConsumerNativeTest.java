@@ -28,7 +28,8 @@ public class RpcConsumerNativeTest {
                 "print",
                 true,4096,
                 "jdk","",
-                true, "counter", 100, 1000);
+                true, "counter", 100, 1000,
+                "fallback");
         IAsyncObjectProxy demoService = rpcClient.createAsync(DemoService.class);
         RpcFuture future = demoService.call("hello","ct");
         LOGGER.info("返回的结果数据为===>>>" + future.get());
@@ -57,7 +58,8 @@ public class RpcConsumerNativeTest {
                 "print",
                 false,4096,
                 "jdk","",
-                true, "counter", 100, 1000);
+                true, "counter", 100, 1000,
+                "fallback");
     }
 
     @Test

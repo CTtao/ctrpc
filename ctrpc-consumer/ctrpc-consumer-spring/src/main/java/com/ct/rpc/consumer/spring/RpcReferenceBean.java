@@ -160,6 +160,10 @@ public class RpcReferenceBean implements FactoryBean<Object> {
      * 毫秒数
      */
     private int milliSeconds;
+    /**
+     * 限流失败时的处理策略
+     */
+    private String rateLimiterFailStrategy;
 
     @Override
     public Object getObject() throws Exception{
@@ -185,7 +189,8 @@ public class RpcReferenceBean implements FactoryBean<Object> {
                 flowType,
                 enableBuffer, bufferSize,
                 reflectType, fallbackClassName,
-                enableRateLimiter, rateLimiterType, permits, milliSeconds);
+                enableRateLimiter, rateLimiterType, permits, milliSeconds,
+                rateLimiterFailStrategy);
         rpcClient.setFallbackClass(fallbackClass);
         this.object = rpcClient.create(interfaceClass);
     }
@@ -441,5 +446,13 @@ public class RpcReferenceBean implements FactoryBean<Object> {
 
     public void setMilliSeconds(int milliSeconds) {
         this.milliSeconds = milliSeconds;
+    }
+
+    public String getRateLimiterFailStrategy() {
+        return rateLimiterFailStrategy;
+    }
+
+    public void setRateLimiterFailStrategy(String rateLimiterFailStrategy) {
+        this.rateLimiterFailStrategy = rateLimiterFailStrategy;
     }
 }
