@@ -33,6 +33,7 @@
         <module>ctrpc-buffer</module>
         <module>ctrpc-ratelimiter</module>
         <module>ctrpc-fusing</module>
+        <module>ctrpc-exception</module>
     </modules>
 
     <properties>
