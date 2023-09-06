@@ -79,6 +79,11 @@
             <artifactId>ctrpc-fusing-counter</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.ct</groupId>
+            <artifactId>ctrpc-fusing-percent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
